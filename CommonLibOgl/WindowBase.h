@@ -8,32 +8,16 @@ namespace CommonLibOgl
 	{
 	public:
 		// Parameters: hInstance - application instance;
-		//             nCmdShow - controls how the window is to be shown;
 		//             wndInfo - information about the window;
 		//             openGLInfo - OpenGL settings.
 		// Throws: Exception, std::bad_alloc
-		WindowBase(HINSTANCE hInstance, int nCmdShow, const WindowInfo& wndInfo, const OpenGLInfo& openGLInfo);
+		WindowBase(HINSTANCE hInstance, const WindowInfo& wndInfo, const OpenGLInfo& openGLInfo);
 
 		virtual ~WindowBase();
 
-		int runMessageLoop();
-
-	protected:
-		// Camera controls.
-
-		void translateCameraX(GLfloat diff);
-		void translateCameraY(GLfloat diff);
-		void translateCameraZ(GLfloat diff);
-
-		void rotateCameraX(GLfloat angleDegrees);
-		void rotateCameraY(GLfloat angleDegrees);
-		void rotateCameraZ(GLfloat angleDegrees);
-
-		void rotateCameraXY(GLfloat xAngleDegrees, GLfloat yAngleDegrees);
-
-		GLfloat getCameraScale() const;
-
-		void scaleCamera(GLfloat amount);
+		// Run the window's message loop.
+		// Parameters: nCmdShow - controls how the window is to be shown.
+		int runMessageLoop(int nCmdShow);
 
 	protected:
 		// The About box dialog procedure.
@@ -43,18 +27,21 @@ namespace CommonLibOgl
 		WindowBase(const WindowBase&) = delete;
 		WindowBase& operator=(const WindowBase&) = delete;
 
+		void resize(int clientWidth, int clientHeight);
+
+		// Notify the derived window about resizing.
+		virtual void onResizeDerived(int clientWidth, int clientHeight) = 0;
+
 		// Initialize the derived window.
 		// Usually used to set up OpenGL scene: load objects, etc.
 		virtual bool initialize() = 0;
 
 		// Render the derived window contents.
-		virtual void render() = 0;
+		virtual void render() const = 0;
 
 		// The derived window procedure.
 		// The base class window procedure processes WM_CREATE, WM_DESTROY, WM_SIZE and redirects WM_KEYDOWN here.
 		virtual LRESULT windowProcDerived(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
-
-		void resize(int clientWidth, int clientHeight);
 
 		ATOM registerClass();
 
@@ -83,25 +70,16 @@ namespace CommonLibOgl
 		// Application instance.
 		HINSTANCE m_hInstance;
 
-#if 0
-		// Width and height of the window's client area (in pixels).
-		int m_clientWidth;
-		int m_clientHeight;
-#else
 		// Information about the window.
 		WindowInfo m_wndInfo;
 
 		// OpenGL settings.
 		OpenGLInfo m_openGlInfo;
-#endif
 
 		// Window handle.
 		HWND m_hWnd;
 
 		// OpenGL rendering context for the main window.
 		HGLRC m_hRC;
-
-		// OpenGL camera.
-		std::unique_ptr<Camera> m_spCamera;
 	};
 }

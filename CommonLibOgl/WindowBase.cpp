@@ -7,7 +7,7 @@ using namespace CommonLibOgl;
 //////////////////////////////////////////////////////////////////////////
 
 
-WindowBase::WindowBase(HINSTANCE hInstance, int nCmdShow, const WindowInfo& wndInfo, const OpenGLInfo& openGLInfo)
+WindowBase::WindowBase(HINSTANCE hInstance, const WindowInfo& wndInfo, const OpenGLInfo& openGLInfo)
 	: m_hInstance(hInstance), m_wndInfo(wndInfo), m_openGlInfo(openGLInfo), m_hWnd(nullptr), m_hRC(nullptr)
 {
 	if (!m_hInstance)
@@ -28,26 +28,6 @@ WindowBase::WindowBase(HINSTANCE hInstance, int nCmdShow, const WindowInfo& wndI
 	{
 		assert(false); throw EXCEPTION(L"Failed to register windows class");
 	}
-
-	// Perform application initialization.
-	if (!initInstance(nCmdShow))
-	{
-		throw EXCEPTION(L"Failed to initialize application instance");
-	}
-
-	// Set up OpenGL context for our window.
-	if (!setupOpenGlContext())
-	{
-		assert(false); throw EXCEPTION_FMT(L"Failed to set up OpenGL context (version %d.%d)", m_openGlInfo.OpenGlMajor, m_openGlInfo.OpenGlMinor);
-	}
-
-	// Initial scale factor for the camera.
-	const GLfloat CameraScaleFactor = 1.0f;
-
-	GLfloat aspectRatio = m_wndInfo.m_clientWidth / (GLfloat)m_wndInfo.m_clientHeight;
-
-	m_spCamera = std::make_unique<Camera>(aspectRatio, CameraScaleFactor, 
-		m_openGlInfo.FieldOfView, m_openGlInfo.FrustumNear, m_openGlInfo.FrustumFar);
 }
 
 WindowBase::~WindowBase()
@@ -299,8 +279,20 @@ void APIENTRY WindowBase::openGlDebugCallback(GLenum source, GLenum type, GLuint
 	std::wcout << std::endl;
 }
 
-int WindowBase::runMessageLoop()
+int WindowBase::runMessageLoop(int nCmdShow)
 {
+	// Perform application initialization.
+	if (!initInstance(nCmdShow))
+	{
+		throw EXCEPTION(L"Failed to initialize application instance");
+	}
+
+	// Set up OpenGL context for our window.
+	if (!setupOpenGlContext())
+	{
+		assert(false); throw EXCEPTION_FMT(L"Failed to set up OpenGL context (version %d.%d)", m_openGlInfo.OpenGlMajor, m_openGlInfo.OpenGlMinor);
+	}
+
 	MSG msg = {};
 
 	// Complete the window initialization.
@@ -345,52 +337,7 @@ void WindowBase::resize(int clientWidth, int clientHeight)
 	// Calculate aspect ratio of the window.
 	gluPerspective(m_openGlInfo.FieldOfView, aspectRatio, m_openGlInfo.FrustumNear, m_openGlInfo.FrustumFar);
 
-	m_spCamera->resize(aspectRatio);
-}
-
-void WindowBase::translateCameraX(GLfloat diff)
-{
-	m_spCamera->translateX(diff);
-}
-
-void WindowBase::translateCameraY(GLfloat diff)
-{
-	m_spCamera->translateY(diff);
-}
-
-void WindowBase::translateCameraZ(GLfloat diff)
-{
-	m_spCamera->translateZ(diff);
-}
-
-void WindowBase::rotateCameraX(GLfloat angleDegrees)
-{
-	m_spCamera->rotateX(angleDegrees);
-}
-
-void WindowBase::rotateCameraY(GLfloat angleDegrees)
-{
-	m_spCamera->rotateY(angleDegrees);
-}
-
-void WindowBase::rotateCameraZ(GLfloat angleDegrees)
-{
-	m_spCamera->rotateZ(angleDegrees);
-}
-
-void WindowBase::rotateCameraXY(GLfloat xAngleDegrees, GLfloat yAngleDegrees)
-{
-	m_spCamera->rotateXY(xAngleDegrees, yAngleDegrees);
-}
-
-GLfloat WindowBase::getCameraScale() const
-{
-	return m_spCamera->getScale();
-}
-
-void WindowBase::scaleCamera(GLfloat amount)
-{
-	m_spCamera->scale(amount);
+	onResizeDerived(clientWidth, clientHeight);
 }
 
 INT_PTR CALLBACK WindowBase::aboutProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
