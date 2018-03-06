@@ -132,37 +132,6 @@ GLuint ProgramGLSL::buildShaders(const ShaderCollection& shaders)
 		return 0;
 	}
 
-	// Validate the program and check the results.
-
-	glValidateProgram(programId);
-
-	GLint resValidation = GL_FALSE;
-	glGetProgramiv(programId, GL_VALIDATE_STATUS, &resValidation);
-
-	if (GL_TRUE != resValidation)
-	{
-		GLint logLen = {};
-		glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &logLen);
-
-		if (logLen > 0)
-		{
-			std::unique_ptr<char[]> spLog = std::make_unique<char[]>(logLen);
-
-			GLsizei written;
-			glGetProgramInfoLog(programId, logLen, &written, spLog.get());
-
-			std::wcerr << L"Failed to validate the program: " << spLog.get() << '\n';
-
-#if _DEBUG
-			CAtlString msg;
-			msg.Format(L"Failed to validate the program:\n%S\n", spLog.get());
-			::OutputDebugStringW(msg);
-#endif
-		}
-
-		return 0;
-	}
-
 	// Clean up the shaders data.
 	for (const auto& itr : shaderIds)
 	{
@@ -197,6 +166,42 @@ bool ProgramGLSL::compileShader(GLuint shader, const std::string& fileName)
 #if _DEBUG
 			CAtlString msg;
 			msg.Format(L"Failed to compile shader %S:\n%S\n", fileName.c_str(), spLog.get());
+			::OutputDebugStringW(msg);
+#endif
+		}
+
+		return false;
+	}
+
+	return true;
+}
+
+bool ProgramGLSL::validate() const
+{
+	GLuint program = getProgram();
+
+	glValidateProgram(program);
+
+	GLint resValidation = GL_FALSE;
+	glGetProgramiv(program, GL_VALIDATE_STATUS, &resValidation);
+
+	if (GL_TRUE != resValidation)
+	{
+		GLint logLen = {};
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLen);
+
+		if (logLen > 0)
+		{
+			std::unique_ptr<char[]> spLog = std::make_unique<char[]>(logLen);
+
+			GLsizei written;
+			glGetProgramInfoLog(program, logLen, &written, spLog.get());
+
+			std::wcerr << L"Failed to validate the program: " << spLog.get() << '\n';
+
+#if _DEBUG
+			CAtlString msg;
+			msg.Format(L"Failed to validate the program:\n%S\n", spLog.get());
 			::OutputDebugStringW(msg);
 #endif
 		}

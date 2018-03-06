@@ -20,6 +20,13 @@ namespace CommonLibOgl
 
 		GLuint getProgram() const;
 
+		// Program validation is better done after all texture sampler uniforms are set 
+		// (typically, at the end of the scene initialization).
+		// Otherwise, on using cubemap with some other texture, program validation will fail with this error:
+		//
+		// Validation failed! - Different sampler types for same sample texture unit in fragment shader.
+		bool validate() const;
+
 	private:
 		ProgramGLSL(const ProgramGLSL&);
 		ProgramGLSL& operator=(const ProgramGLSL&);
