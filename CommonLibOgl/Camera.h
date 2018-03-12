@@ -30,6 +30,9 @@ namespace CommonLibOgl
 		// Parameters: aspectRatio - aspect ratio of the main application window.
 		void resize(GLfloat aspectRatio);
 
+		// Get translation vector of the camera.
+		glm::vec3 getTranslation() const;
+
 		void translateX(GLfloat diff);
 		void translateY(GLfloat diff);
 		void translateZ(GLfloat diff);

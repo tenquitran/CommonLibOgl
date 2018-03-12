@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="primitives">
+      <UniqueIdentifier>{4db3fb85-b9cc-4122-9e3b-56f2b176e37a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{8af30f9f-b473-438c-b6b1-01d700b9aaed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -45,6 +51,9 @@
     <ClInclude Include="OpenGLInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LightSourceVisible.h">
+      <Filter>primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -62,5 +71,16 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LightSourceVisible.cpp">
+      <Filter>primitives</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\lightSourceVisible.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\lightSourceVisible.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

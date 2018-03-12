@@ -86,6 +86,11 @@ void Camera::resize(GLfloat aspectRatio)
 	updateMVP();
 }
 
+glm::vec3 Camera::getTranslation() const
+{
+	return m_translation;
+}
+
 void Camera::translateX(GLfloat diff)
 {
 	m_translation.x += diff;

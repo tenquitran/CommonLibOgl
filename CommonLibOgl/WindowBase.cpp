@@ -170,6 +170,12 @@ bool WindowBase::setupOpenGlContext()
 		WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB | WGL_CONTEXT_DEBUG_BIT_ARB,
 #endif
 
+#if 1
+		// TODO: temp; multisampling
+		WGL_SAMPLE_BUFFERS_ARB, 1, // Number of buffers (must be 1 at time of writing)
+		WGL_SAMPLES_ARB, 16,        // Number of samples
+#endif
+
 		0 };    // zero indicates the end of the array
 
 	// If the pointer to this extension is NULL, the OpenGL version is not supported.

@@ -5,7 +5,3 @@ Uses libraries:
 	- GLM: http://glm.g-truc.net/
 
 Created: February 23, 2018
-
----
-
-TODO: as our lib is OpenGL-specific, we can place the function to create OpenGL context to the base window class.
