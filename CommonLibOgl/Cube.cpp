@@ -7,15 +7,14 @@ using namespace CommonLibOgl;
 //////////////////////////////////////////////////////////////////////////
 
 
-LightSourceVisible::LightSourceVisible(const Camera& camera, float cubeSide, const glm::vec3& color)
-	: m_camera(camera), m_cubeSide(cubeSide), m_colorEmissive(color), m_vao{}, m_vbo{}, m_index{}, m_indexCount{}
+Cube::Cube(GLuint program, const Camera& camera, float cubeSide, const MaterialPhong& material)
+	: m_program(program), m_camera(camera), m_cubeSide(cubeSide), m_material(material), 
+	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}
 {
-	const ShaderCollection shaders = {
-		{ GL_VERTEX_SHADER,   "shaders\\lightSourceVisible.vert" },
-		{ GL_FRAGMENT_SHADER, "shaders\\lightSourceVisible.frag" }
-	};
-
-	m_spProgram = std::make_unique<ProgramGLSL>(shaders);
+	if (!m_program)
+	{
+		assert(false); throw EXCEPTION(L"Invalid GLSL program");
+	}
 
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
@@ -25,9 +24,9 @@ LightSourceVisible::LightSourceVisible(const Camera& camera, float cubeSide, con
 	float vertices[] = {
 		// Front
 		-HalfSide, -HalfSide, HalfSide,
-		 HalfSide, -HalfSide, HalfSide,
-		 HalfSide,  HalfSide, HalfSide,
-		-HalfSide,  HalfSide, HalfSide,
+		HalfSide, -HalfSide, HalfSide,
+		HalfSide, HalfSide, HalfSide,
+		-HalfSide, HalfSide, HalfSide,
 		// Right
 		HalfSide, -HalfSide, HalfSide,
 		HalfSide, -HalfSide, -HalfSide,
@@ -85,26 +84,68 @@ LightSourceVisible::LightSourceVisible(const Camera& camera, float cubeSide, con
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, _countof(indices) * sizeof(indices[0]), indices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	glUseProgram(m_spProgram->getProgram());
+	GLfloat normals[] = {
+		// Front
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		// Right
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		// Back
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		// Left
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		// Bottom
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		// Top
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f
+	};
 
-	// Set the light color uniform.
-	glUniform3fv(1, 1, glm::value_ptr(m_colorEmissive));
+	// Set up the normal buffer.
+
+	glGenBuffers(1, &m_normal);
+	glBindBuffer(GL_ARRAY_BUFFER, m_normal);
+	glBufferData(GL_ARRAY_BUFFER, _countof(normals) * sizeof(normals[0]), normals, GL_STATIC_DRAW);
+
+	// Fill in the normal attribute.
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+	glEnableVertexAttribArray(1);
+
+	glUseProgram(m_program);
+
+	// TODO: set uniforms
 
 	glUseProgram(0);
-
-	if (!m_spProgram->validate())
-	{
-		assert(false); throw EXCEPTION(L"GLSL program validation failed");
-	}
 
 	// Initialize matrices according to the camera state.
 	updateViewMatrices();
 }
 
-LightSourceVisible::~LightSourceVisible()
+Cube::~Cube()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	if (0 != m_normal)
+	{
+		glDeleteBuffers(1, &m_normal);
+	}
 
 	if (0 != m_index)
 	{
@@ -123,25 +164,22 @@ LightSourceVisible::~LightSourceVisible()
 	}
 }
 
-void LightSourceVisible::updateViewMatrices() const
+void Cube::updateViewMatrices() const
 {
-	assert(m_spProgram);
+	assert(m_program);
 
-	glUseProgram(m_spProgram->getProgram());
+	glUseProgram(m_program);
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(m_camera.getModelViewProjectionMatrix()));
 
 	glUseProgram(0);
 }
 
-void LightSourceVisible::render() const
+void Cube::render() const
 {
-	// TODO: move?
-	updateViewMatrices();
+	assert(m_program);
 
-	assert(m_spProgram);
-
-	glUseProgram(m_spProgram->getProgram());
+	glUseProgram(m_program);
 	glBindVertexArray(m_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index);

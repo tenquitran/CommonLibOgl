@@ -36,8 +36,15 @@
 #include "WindowBase.h"
 #include "ProgramGLSL.h"
 
+
+// Materials.
+#include "MaterialPhong.h"
+
+
 // Commonly used graphics primitives and light sources.
+#include "Renderable.h"
 #include "LightSourceVisible.h"
+#include "Cube.h"
 
 
 namespace CommonLibOgl

@@ -4,9 +4,10 @@
 namespace CommonLibOgl
 {
 	// Visible light source (a cube).
-	// Uses data from
+	// Uses vertex and index data from
 	// https://github.com/daw42/glslcookbook/blob/master/ingredients/vbocube.cpp
 	class LightSourceVisible
+		: public Renderable
 	{
 	public:
 		// Parameters: cubeSide - size of the light source cube side;
@@ -16,9 +17,9 @@ namespace CommonLibOgl
 		virtual ~LightSourceVisible();
 
 		// Update Model-View-Projection (MVP) and other matrices in the GLSL program.
-		void updateViewMatrices() const;
+		virtual void updateViewMatrices() const override;
 
-		void render() const;
+		virtual void render() const override;
 
 	private:
 		LightSourceVisible(const LightSourceVisible&) = delete;
@@ -27,8 +28,10 @@ namespace CommonLibOgl
 	private:
 		const Camera& m_camera;
 
-		const float CubeSide;
-		const glm::vec3 Color;
+		const float m_cubeSide;
+
+		// For simplicity, the light source has only the emissive color.
+		const glm::vec3 m_colorEmissive;
 
 		GLuint m_vao;
 		GLuint m_vbo;
