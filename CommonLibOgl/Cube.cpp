@@ -129,7 +129,31 @@ Cube::Cube(GLuint program, const Camera& camera, float cubeSide, const MaterialP
 
 	glUseProgram(m_program);
 
-	// TODO: set uniforms
+	// Set material properties.
+
+	GLuint mAmbient = glGetUniformLocation(m_program, "Material.ambient");
+	if (-1 != mAmbient)
+	{
+		glUniform3fv(mAmbient, 1, glm::value_ptr(m_material.m_ambientColor));
+	}
+
+	GLuint mDiffuse = glGetUniformLocation(m_program, "Material.diffuse");
+	if (-1 != mDiffuse)
+	{
+		glUniform3fv(mDiffuse, 1, glm::value_ptr(m_material.m_diffuseColor));
+	}
+
+	GLuint mSpecular = glGetUniformLocation(m_program, "Material.specular");
+	if (-1 != mSpecular)
+	{
+		glUniform3fv(mSpecular, 1, glm::value_ptr(m_material.m_specularColor));
+	}
+
+	GLuint mShininess = glGetUniformLocation(m_program, "Material.shininess");
+	if (-1 != mShininess)
+	{
+		glUniform1f(mShininess, m_material.m_shininess);
+	}
 
 	glUseProgram(0);
 
@@ -171,6 +195,15 @@ void Cube::updateViewMatrices() const
 	glUseProgram(m_program);
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(m_camera.getModelViewProjectionMatrix()));
+
+	glm::mat4 mv = m_camera.getModelViewMatrix();
+
+	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(mv));
+
+	glm::mat3 normal = glm::mat3(glm::transpose(glm::inverse(mv)));
+	//glm::mat3 normal = glm::mat3(glm::vec3(mv[0]), glm::vec3(mv[1]), glm::vec3(mv[2]));
+
+	glUniformMatrix3fv(2, 1, GL_FALSE, glm::value_ptr(normal));
 
 	glUseProgram(0);
 }
