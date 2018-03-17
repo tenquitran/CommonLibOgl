@@ -81,5 +81,7 @@ namespace CommonLibOgl
 
 		// OpenGL rendering context for the main window.
 		HGLRC m_hRC;
+
+		HWND m_hWndTemporary;
 	};
 }

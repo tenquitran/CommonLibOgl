@@ -8,7 +8,8 @@ using namespace CommonLibOgl;
 
 
 WindowBase::WindowBase(HINSTANCE hInstance, const WindowInfo& wndInfo, const OpenGLInfo& openGLInfo)
-	: m_hInstance(hInstance), m_wndInfo(wndInfo), m_openGlInfo(openGLInfo), m_hWnd(nullptr), m_hRC(nullptr)
+	: m_hInstance(hInstance), m_wndInfo(wndInfo), m_openGlInfo(openGLInfo), 
+	  m_hWnd(nullptr), m_hRC(nullptr), m_hWndTemporary(nullptr)
 {
 	if (!m_hInstance)
 	{
@@ -32,6 +33,10 @@ WindowBase::WindowBase(HINSTANCE hInstance, const WindowInfo& wndInfo, const Ope
 
 WindowBase::~WindowBase()
 {
+	if (m_hWndTemporary)
+	{
+		DestroyWindow(m_hWndTemporary);
+	}
 }
 
 ATOM WindowBase::registerClass()
@@ -56,17 +61,17 @@ ATOM WindowBase::registerClass()
 
 BOOL WindowBase::initInstance(int nCmdShow)
 {
-	const DWORD WINDOW_STYLE = WS_POPUPWINDOW | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_MINIMIZEBOX;
+	const DWORD WindowStyle = WS_POPUPWINDOW | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_MINIMIZEBOX;
 
 	RECT wndRect = { 0, 0, m_wndInfo.m_clientWidth, m_wndInfo.m_clientHeight };
 
-	if (!AdjustWindowRect(&wndRect, WINDOW_STYLE, FALSE))
+	if (!AdjustWindowRect(&wndRect, WindowStyle, FALSE))
 	{
 		std::wcerr << L"AdjustWindowRect() failed: " << GetLastError() << '\n';
 		assert(false); return FALSE;
 	}
 
-	m_hWnd = CreateWindow(m_szWindowClass, m_szTitle, WINDOW_STYLE, CW_USEDEFAULT, CW_USEDEFAULT,
+	m_hWnd = CreateWindow(m_szWindowClass, m_szTitle, WindowStyle, CW_USEDEFAULT, CW_USEDEFAULT,
 		wndRect.right - wndRect.left, wndRect.bottom - wndRect.top, nullptr, nullptr, m_hInstance, this);
 	if (!m_hWnd)
 	{
@@ -93,32 +98,34 @@ bool WindowBase::setupOpenGlContext()
 		assert(false); return false;
 	}
 
-	HDC hDC = GetDC(m_hWnd);
-	if (!hDC)
-	{
-		std::wcerr << L"Windows device context is NULL\n";
-		assert(false); return false;
-	}
+	// Create temporary window and get its device context.
 
-	// Step 1. Set pixel format for the Windows DC.
+	const DWORD WindowStyle = WS_POPUPWINDOW | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_MINIMIZEBOX;
 
-	PIXELFORMATDESCRIPTOR pfd = {};
+	m_hWndTemporary = CreateWindow(m_szWindowClass, L"Title", WindowStyle, 0, 0, 1, 1, nullptr, nullptr, m_hInstance, this);
 
-	pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-	pfd.nVersion = 1;
-	pfd.dwFlags =
+	HDC tempDC = GetDC(m_hWndTemporary);
+
+	// Step 1. Set pixel format for the window's DC.
+
+	PIXELFORMATDESCRIPTOR tempPfd = {};
+
+	tempPfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	tempPfd.nVersion = 1;
+	tempPfd.dwFlags =
 		PFD_SUPPORT_OPENGL |    // OpenGL window
 		PFD_DRAW_TO_WINDOW |    // render to window
 		PFD_DOUBLEBUFFER;       // support double-buffering
-	pfd.iPixelType = PFD_TYPE_RGBA;       // color type: red, green, blue, and alpha
-	pfd.cColorBits = 32;                  // preferred color depth (bits per pixel for each color buffer): 8, 16, 24, or 32
-	pfd.cDepthBits = 24;                  // depth of the depth (z-axis) buffer
+	tempPfd.iPixelType = PFD_TYPE_RGBA;       // color type: red, green, blue, and alpha
+	tempPfd.cColorBits = 32;                  // preferred color depth (bits per pixel for each color buffer): 8, 16, 24, or 32
+	tempPfd.cDepthBits = 24;                  // depth of the depth (z-axis) buffer
+	tempPfd.cAlphaBits = 8;
 	//pfd.iLayerType = PFD_MAIN_PLANE;    // main layer. Ignored in OpenGL 3.0 and later
 
 	// The OS/driver will try to find the matching pixel format.
 	// If some value cannot be set, it will be replaced by the highest possible value (e.g. 24-bit colors instead of 32-bit).
 	// Returns an integer ID of the pixel format.
-	int pixelFormat = ChoosePixelFormat(hDC, &pfd);
+	int pixelFormat = ChoosePixelFormat(tempDC, &tempPfd);
 	if (0 == pixelFormat)
 	{
 		std::wcerr << L"ChoosePixelFormat() failed: " << ::GetLastError() << '\n';
@@ -126,22 +133,22 @@ bool WindowBase::setupOpenGlContext()
 	}
 
 	// Set the pixel format for the device context and the associated window.
-	if (!SetPixelFormat(hDC, pixelFormat, &pfd))
+	if (!SetPixelFormat(tempDC, pixelFormat, &tempPfd))
 	{
 		std::wcerr << L"SetPixelFormat() failed: " << ::GetLastError() << '\n';
 		assert(false); return false;
 	}
 
 	// Step 2. Create a temporary OpenGL rendering context to try to get the latest one - see below.
-	HGLRC hRcTmp = wglCreateContext(hDC);
-	if (!hRcTmp)
+	HGLRC hTempRC = wglCreateContext(tempDC);
+	if (!hTempRC)
 	{
 		std::wcerr << L": wglCreateContext() failed: " << ::GetLastError() << '\n';
 		assert(false); return false;
 	}
 
 	// Step 3. Make the temporary rendering context current for our thread.
-	if (!wglMakeCurrent(hDC, hRcTmp))
+	if (!wglMakeCurrent(tempDC, hTempRC))
 	{
 		std::wcerr << L": wglMakeCurrent() failed: " << ::GetLastError() << '\n';
 		assert(false); return false;
@@ -161,22 +168,67 @@ bool WindowBase::setupOpenGlContext()
 
 	// Step 5. Set up the modern OpenGL rendering context.
 
-	// Set the OpenGL version required.
+	// Use the maximum allowed number of samples for anti-aliasing.
+	GLint maxSamples = {};
+	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+
 	int attribs[] = {
+		WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
+		WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
+		WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
+		WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
+		WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
+		WGL_COLOR_BITS_ARB, 32,
+		WGL_DEPTH_BITS_ARB, 24,
+		WGL_ALPHA_BITS_ARB, 8,
+		WGL_STENCIL_BITS_ARB, 8,
+		WGL_SAMPLE_BUFFERS_ARB, 1,      // number of buffers for multisampling (must be 1)
+		WGL_SAMPLES_ARB, maxSamples,    // number of samples
+		0};    // zero indicates the end of the array
+
+	int pixelFormat2 = {};
+	UINT numFormats = {};
+
+	HDC hDC = GetDC(m_hWnd);
+	if (!hDC)
+	{
+		std::wcerr << L"Windows device context is NULL\n";
+		assert(false); return false;
+	}
+
+	if (   !wglChoosePixelFormatARB(hDC, attribs, nullptr, 1, &pixelFormat2, &numFormats)
+		|| 0 == numFormats) 
+	{
+		std::wcerr << L"wglChoosePixelFormatARB() failed\n";
+		assert(false); return false;
+	}
+
+	PIXELFORMATDESCRIPTOR pfd = {};
+
+	if (0 == DescribePixelFormat(hDC, pixelFormat2, sizeof(pfd), &pfd))
+	{
+		std::wcerr << L"DescribePixelFormat() failed: " << GetLastError() << '\n';
+		assert(false); return false;
+	}
+
+	if (!SetPixelFormat(hDC, pixelFormat2, &pfd))
+	{
+		std::wcerr << L"SetPixelFormat() failed: " << GetLastError() << '\n';
+		assert(false); return false;
+	}
+
+	// Create a modern OpenGL context.
+
+	int contextAttribs[] = {
 		WGL_CONTEXT_MAJOR_VERSION_ARB, m_openGlInfo.OpenGlMajor,
 		WGL_CONTEXT_MINOR_VERSION_ARB, m_openGlInfo.OpenGlMinor,
+		WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
 
 #if _DEBUG
 		WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB | WGL_CONTEXT_DEBUG_BIT_ARB,
 #endif
-
-#if 1
-		// TODO: temp; multisampling
-		WGL_SAMPLE_BUFFERS_ARB, 1, // Number of buffers (must be 1 at time of writing)
-		WGL_SAMPLES_ARB, 16,        // Number of samples
-#endif
-
-		0 };    // zero indicates the end of the array
+		0
+	};
 
 	// If the pointer to this extension is NULL, the OpenGL version is not supported.
 	if (!wglCreateContextAttribsARB)
@@ -185,8 +237,7 @@ bool WindowBase::setupOpenGlContext()
 		assert(false); return false;
 	}
 
-	// Create a modern OpenGL context.
-	m_hRC = wglCreateContextAttribsARB(hDC, 0, attribs);
+	m_hRC = wglCreateContextAttribsARB(hDC, 0, contextAttribs);
 	if (!m_hRC)
 	{
 		std::wcerr << L"wglCreateContextAttribsARB() failed\n";
@@ -194,7 +245,7 @@ bool WindowBase::setupOpenGlContext()
 	}
 
 	// On success, delete the temporary context.
-	wglDeleteContext(hRcTmp);
+	wglDeleteContext(hTempRC);
 
 	// Step 6. Make the final rendering context current for our thread.
 	if (!wglMakeCurrent(hDC, m_hRC))
@@ -202,6 +253,8 @@ bool WindowBase::setupOpenGlContext()
 		std::wcerr << L"wglMakeCurrent() failed (2): " << GetLastError() << '\n';
 		assert(false); return false;
 	}
+
+	ReleaseDC(m_hWndTemporary, tempDC);
 
 	glDebugMessageCallback(openGlDebugCallback, nullptr);
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
@@ -373,8 +426,12 @@ LRESULT CALLBACK WindowBase::windowProc(HWND hWnd, UINT message, WPARAM wParam, 
 	switch (message)
 	{
 	case WM_CREATE:
-		pMainWnd = (WindowBase *)((LPCREATESTRUCT)lParam)->lpCreateParams;
-		assert(pMainWnd);
+		// Our code first creates real, then a fake window. So we initialize our main window pointer only once.
+		if (!pMainWnd)
+		{
+			pMainWnd = (WindowBase *)((LPCREATESTRUCT)lParam)->lpCreateParams;
+			assert(pMainWnd);
+		}
 		break;
 	case WM_SIZE:
 		{
