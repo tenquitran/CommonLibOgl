@@ -52,7 +52,16 @@ ATOM WindowBase::registerClass()
 	wcex.hIcon = LoadIcon(m_hInstance, MAKEINTRESOURCE(m_wndInfo.m_iconId));
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	wcex.lpszMenuName = MAKEINTRESOURCE(m_wndInfo.m_menuId);
+
+	if (!m_wndInfo.m_menuId)
+	{
+		wcex.lpszMenuName = nullptr;
+	}
+	else
+	{
+		wcex.lpszMenuName = MAKEINTRESOURCE(m_wndInfo.m_menuId);
+	}
+	
 	wcex.lpszClassName = m_szWindowClass;
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(m_wndInfo.m_iconSmallId));
 

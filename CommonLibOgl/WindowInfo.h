@@ -7,7 +7,8 @@ namespace CommonLibOgl
 	struct WindowInfo
 	{
 	public:
-		WindowInfo(int clientWidth, int clientHeight, UINT titleId, UINT wndClassId, WORD iconId, WORD iconSmallId, WORD menuId)
+		// Note: to create a window without menu, omit the menuId argument.
+		WindowInfo(int clientWidth, int clientHeight, UINT titleId, UINT wndClassId, WORD iconId, WORD iconSmallId, WORD menuId = 0)
 			: m_clientWidth(clientWidth), m_clientHeight(clientHeight), m_titleId(titleId), 
 			  m_wndClassId(wndClassId), m_iconId(iconId), m_iconSmallId(iconSmallId), m_menuId(menuId)
 		{
