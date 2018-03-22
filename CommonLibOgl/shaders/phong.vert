@@ -15,10 +15,8 @@ out vec3 vNormal;
 void main()
 {
 	vNormal = normalize(Normal * normal);
-	//Normal = normalize( NormalMatrix * VertexNormal);
 
 	vPos = vec3(ModelView * vec4(position, 1.0));
-	//Position = vec3( ModelViewMatrix * vec4(VertexPosition,1.0) );
 
 	gl_Position = MVP * vec4(position, 1.0);
 }

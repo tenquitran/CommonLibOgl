@@ -3,8 +3,8 @@
 
 namespace CommonLibOgl
 {
-	// Cube with Phong shading.
-	// Uses vertex, index and other data from
+	// Solid-colored cube with Phong shading.
+	// Uses vertex, index and normals data from
 	// https://github.com/daw42/glslcookbook/blob/master/ingredients/vbocube.cpp
 	class Cube
 		: public Renderable
