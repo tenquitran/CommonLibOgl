@@ -59,22 +59,20 @@ namespace CommonLibOgl
 		GLfloat m_aspectRatio;
 
 		// Initial scale factor for the camera.
-		const GLfloat SCALE_FACTOR_INITIAL;
+		const GLfloat ScaleFactorInitial;
 
 		// Minimum scale factor value.
-		const GLfloat SCALE_FACTOR_MINIMUM;
+		const GLfloat ScaleFactorMin;
 
 		// Variable (user-defined) scale factor for the camera.
 		GLfloat m_scaleFactorVariable;
 
 		// Field of view angle.
-		const GLfloat FIELD_OF_VIEW;
+		const GLfloat FieldOfView;
 
-		// Near frustum boundary.
-		const GLfloat FRUSTUM_NEAR;
-
-		// Far frustum boundary.
-		const GLfloat FRUSTUM_FAR;
+		// Frustum boundaries.
+		const GLfloat FrustumNear;
+		const GLfloat FrustumFar;
 
 		// Translation vector of the camera.
 		glm::vec3 m_translation;

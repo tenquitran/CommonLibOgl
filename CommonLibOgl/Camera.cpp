@@ -10,12 +10,12 @@ using namespace CommonLibOgl;
 Camera::Camera(GLfloat aspectRatio, GLfloat scaleFactor /*= 1.0f*/, 
 	GLfloat fieldOfView /*= 45.0f*/, GLfloat frustumNear /*= 0.1f*/, GLfloat frustumFar /*= 1000.0f*/)
 	: m_aspectRatio(aspectRatio), 
-	  SCALE_FACTOR_INITIAL(scaleFactor), SCALE_FACTOR_MINIMUM(0.01f), m_scaleFactorVariable(1.0f),
-	  FIELD_OF_VIEW(fieldOfView), FRUSTUM_NEAR(frustumNear), FRUSTUM_FAR(frustumFar)
+	  ScaleFactorInitial(scaleFactor), ScaleFactorMin(0.01f), m_scaleFactorVariable(1.0f),
+	  FieldOfView(fieldOfView), FrustumNear(frustumNear), FrustumFar(frustumFar)
 {
 	m_view = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.5f),    // camera location
-		glm::vec3(0.0f, 0.0f, 0.0f),                     // look towards this point
-		glm::vec3(0.0f, 1.0f, 0.0f));                    // the "up" direction
+		glm::vec3(0.0f),                     // look towards this point
+		glm::vec3(0.0f, 1.0f, 0.0f));        // the "up" direction
 
 	updateMVP();
 }
@@ -55,13 +55,13 @@ void Camera::updateMVP()
 	// The model matrix is often changed, and the projection matrix should take into account the current aspect ratio.
 
 	// Projection matrix transforms coordinates from viewing space to screen space.
-	m_projection = glm::perspective(glm::radians(FIELD_OF_VIEW), m_aspectRatio, FRUSTUM_NEAR, FRUSTUM_FAR);
+	m_projection = glm::perspective(glm::radians(FieldOfView), m_aspectRatio, FrustumNear, FrustumFar);
 
 	// Reset the model matrix; otherwise, transformations will be accumulated.
 	m_model = glm::mat4(1.0f);
 
 	// Apply the user-defined translation component.
-	m_model *= glm::translate(glm::mat4(1.0f), glm::vec3(m_translation.x, m_translation.y, m_translation.z));
+	m_model *= glm::translate(glm::mat4(1.0f), m_translation);
 
 	// Apply the user-defined rotation components.
 	m_model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.x), glm::vec3(1.0f, 0.0f, 0.0));    // X axis
@@ -69,10 +69,10 @@ void Camera::updateMVP()
 	m_model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.z), glm::vec3(0.0f, 0.0f, 1.0));    // Z axis
 
 	// Apply the initial scale factor.
-	m_model *= glm::scale(glm::mat4(1.0f), glm::vec3(SCALE_FACTOR_INITIAL, SCALE_FACTOR_INITIAL, SCALE_FACTOR_INITIAL));
+	m_model *= glm::scale(glm::mat4(1.0f), glm::vec3(ScaleFactorInitial));
 
 	// Apply the user-defined scale factor.
-	m_model *= glm::scale(glm::mat4(1.0f), glm::vec3(m_scaleFactorVariable, m_scaleFactorVariable, m_scaleFactorVariable));
+	m_model *= glm::scale(glm::mat4(1.0f), glm::vec3(m_scaleFactorVariable));
 
 	m_mv = m_view * m_model;
 
@@ -144,7 +144,7 @@ void Camera::rotateXY(GLfloat xAngleDegrees, GLfloat yAngleDegrees)
 GLfloat Camera::getScale() const
 {
 	// TODO: is this correct?
-	return (SCALE_FACTOR_INITIAL * m_scaleFactorVariable);
+	return (ScaleFactorInitial * m_scaleFactorVariable);
 }
 
 void Camera::scale(GLfloat amount)
@@ -154,7 +154,7 @@ void Camera::scale(GLfloat amount)
 	// Prevent the camera flipping from zooming in to zooming out when the scale factor changes sign.
 	if (m_scaleFactorVariable < 0)
 	{
-		m_scaleFactorVariable = SCALE_FACTOR_MINIMUM;
+		m_scaleFactorVariable = ScaleFactorMin;
 		OutputDebugStringW(L"ZERO\n");
 	}
 
