@@ -9,8 +9,7 @@ using namespace CommonLibOgl;
 
 Camera::Camera(GLfloat aspectRatio, GLfloat scaleFactor /*= 1.0f*/, 
 	GLfloat fieldOfView /*= 45.0f*/, GLfloat frustumNear /*= 0.1f*/, GLfloat frustumFar /*= 1000.0f*/)
-	: m_aspectRatio(aspectRatio), 
-	  ScaleFactorInitial(scaleFactor), ScaleFactorMin(0.01f), m_scaleFactorVariable(1.0f),
+	: m_aspectRatio(aspectRatio), ScaleFactorMin(0.01f), m_scaleFactor(scaleFactor),
 	  FieldOfView(fieldOfView), FrustumNear(frustumNear), FrustumFar(frustumFar)
 {
 	m_view = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.5f),    // camera location
@@ -68,11 +67,8 @@ void Camera::updateMVP()
 	m_model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.y), glm::vec3(0.0f, 1.0f, 0.0));    // Y axis
 	m_model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.z), glm::vec3(0.0f, 0.0f, 1.0));    // Z axis
 
-	// Apply the initial scale factor.
-	m_model *= glm::scale(glm::mat4(1.0f), glm::vec3(ScaleFactorInitial));
-
-	// Apply the user-defined scale factor.
-	m_model *= glm::scale(glm::mat4(1.0f), glm::vec3(m_scaleFactorVariable));
+	// Apply the scale factor.
+	m_model *= glm::scale(glm::mat4(1.0f), glm::vec3(m_scaleFactor));
 
 	m_mv = m_view * m_model;
 
@@ -143,18 +139,17 @@ void Camera::rotateXY(GLfloat xAngleDegrees, GLfloat yAngleDegrees)
 
 GLfloat Camera::getScale() const
 {
-	// TODO: is this correct?
-	return (ScaleFactorInitial * m_scaleFactorVariable);
+	return m_scaleFactor;
 }
 
 void Camera::scale(GLfloat amount)
 {
-	m_scaleFactorVariable += amount;
+	m_scaleFactor += amount;
 
 	// Prevent the camera flipping from zooming in to zooming out when the scale factor changes sign.
-	if (m_scaleFactorVariable < 0)
+	if (m_scaleFactor < 0.0f)
 	{
-		m_scaleFactorVariable = ScaleFactorMin;
+		m_scaleFactor = ScaleFactorMin;
 		OutputDebugStringW(L"ZERO\n");
 	}
 

@@ -7,7 +7,7 @@ namespace CommonLibOgl
 	{
 	public:
 		// Parameters: aspectRatio - aspect ratio of the main application window;
-		//             scaleFactor - initial scale factor for the camera;
+		//             scaleFactor - scale factor for the camera;
 		//             fieldOfView - field of view angle;
 		//             frustumNear - near frustum boundary;
 		//             frustumFar  - far frustum boundary.
@@ -58,14 +58,11 @@ namespace CommonLibOgl
 		// Aspect ratio of the main application window.
 		GLfloat m_aspectRatio;
 
-		// Initial scale factor for the camera.
-		const GLfloat ScaleFactorInitial;
-
 		// Minimum scale factor value.
 		const GLfloat ScaleFactorMin;
 
-		// Variable (user-defined) scale factor for the camera.
-		GLfloat m_scaleFactorVariable;
+		// Current scale factor for the camera.
+		GLfloat m_scaleFactor;
 
 		// Field of view angle.
 		const GLfloat FieldOfView;
