@@ -3,5 +3,6 @@ CommonLibOgl  - a static library containing commonly used OpenGL functionality, 
 Uses libraries:
 	- GLEW: http://glew.sourceforge.net/
 	- GLM: http://glm.g-truc.net/
+	- SOIL: http://www.lonesock.net/soil.html
 
 Created: February 23, 2018

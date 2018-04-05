@@ -10,7 +10,11 @@ namespace CommonLibOgl
 		: public Renderable
 	{
 	public:
-		Cube(GLuint program, const Camera& camera, float cubeSide, const MaterialPhong& material);
+		// Parameters: program - GLSL program ID;
+		//             camera - scene camera;
+		//             side - cube side length;
+		//             material - Phong material properties.
+		Cube(GLuint program, const Camera& camera, GLfloat side, const MaterialPhong& material);
 
 		virtual ~Cube();
 
@@ -28,7 +32,7 @@ namespace CommonLibOgl
 
 		const Camera& m_camera;
 
-		const float m_cubeSide;
+		const GLfloat m_cubeSide;
 
 		const MaterialPhong m_material;
 

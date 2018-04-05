@@ -66,6 +66,9 @@
     <ClInclude Include="Renderable.h">
       <Filter>Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="Cubemap.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -89,6 +92,9 @@
     <ClCompile Include="Cube.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="Cubemap.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\lightSourceVisible.frag">
@@ -101,6 +107,12 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\phong.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\cubemap.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\cubemap.vert">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

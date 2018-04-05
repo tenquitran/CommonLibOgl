@@ -7,8 +7,8 @@ using namespace CommonLibOgl;
 //////////////////////////////////////////////////////////////////////////
 
 
-Cube::Cube(GLuint program, const Camera& camera, float cubeSide, const MaterialPhong& material)
-	: m_program(program), m_camera(camera), m_cubeSide(cubeSide), m_material(material), 
+Cube::Cube(GLuint program, const Camera& camera, GLfloat side, const MaterialPhong& material)
+	: m_program(program), m_camera(camera), m_cubeSide(side), m_material(material), 
 	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}
 {
 	if (!m_program)
@@ -19,9 +19,9 @@ Cube::Cube(GLuint program, const Camera& camera, float cubeSide, const MaterialP
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
 
-	const float HalfSide = m_cubeSide / 2.0f;
+	const GLfloat HalfSide = m_cubeSide / 2.0f;
 
-	float vertices[] = {
+	GLfloat vertices[] = {
 		// Front
 		-HalfSide, -HalfSide, HalfSide,
 		HalfSide, -HalfSide, HalfSide,
@@ -124,7 +124,7 @@ Cube::Cube(GLuint program, const Camera& camera, float cubeSide, const MaterialP
 	glBufferData(GL_ARRAY_BUFFER, _countof(normals) * sizeof(normals[0]), normals, GL_STATIC_DRAW);
 
 	// Fill in the normal attribute.
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(1);
 
 	glUseProgram(m_program);

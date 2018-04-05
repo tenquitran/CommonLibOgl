@@ -22,10 +22,6 @@ namespace CommonLibOgl
 		virtual void render() const override;
 
 	private:
-		LightSourceVisible(const LightSourceVisible&) = delete;
-		LightSourceVisible& operator=(const LightSourceVisible&) = delete;
-
-	private:
 		const Camera& m_camera;
 
 		const float m_cubeSide;

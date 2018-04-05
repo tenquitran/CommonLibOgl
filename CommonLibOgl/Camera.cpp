@@ -13,8 +13,8 @@ Camera::Camera(GLfloat aspectRatio, GLfloat scaleFactor /*= 1.0f*/,
 	  FieldOfView(fieldOfView), FrustumNear(frustumNear), FrustumFar(frustumFar)
 {
 	m_view = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.5f),    // camera location
-		glm::vec3(0.0f),                     // look towards this point
-		glm::vec3(0.0f, 1.0f, 0.0f));        // the "up" direction
+		glm::vec3(),                     // look towards this point
+		glm::vec3(0.0f, 1.0f, 0.0f));    // the "up" direction
 
 	updateMVP();
 }
@@ -59,15 +59,15 @@ void Camera::updateMVP()
 	// Reset the model matrix; otherwise, transformations will be accumulated.
 	m_model = glm::mat4(1.0f);
 
-	// Apply the user-defined translation component.
+	// Apply translation.
 	m_model *= glm::translate(glm::mat4(1.0f), m_translation);
 
-	// Apply the user-defined rotation components.
+	// Apply rotation.
 	m_model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.x), glm::vec3(1.0f, 0.0f, 0.0));    // X axis
 	m_model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.y), glm::vec3(0.0f, 1.0f, 0.0));    // Y axis
 	m_model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.z), glm::vec3(0.0f, 0.0f, 1.0));    // Z axis
 
-	// Apply the scale factor.
+	// Apply scaling.
 	m_model *= glm::scale(glm::mat4(1.0f), glm::vec3(m_scaleFactor));
 
 	m_mv = m_view * m_model;
@@ -150,8 +150,18 @@ void Camera::scale(GLfloat amount)
 	if (m_scaleFactor < 0.0f)
 	{
 		m_scaleFactor = ScaleFactorMin;
+#if _DEBUG
 		OutputDebugStringW(L"ZERO\n");
+#endif
+#if _DEBUG
 	}
+	else
+	{
+		CAtlString msg;
+		msg.Format(L"Camera scale: %0.3f\n", m_scaleFactor);
+		OutputDebugStringW(msg.GetString());
+	}
+#endif
 
 	updateMVP();
 }
