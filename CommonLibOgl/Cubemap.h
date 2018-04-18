@@ -3,6 +3,8 @@
 
 namespace CommonLibOgl
 {
+	// TODO: fix and uncomment
+#if 0
 	// Cubemap.
 	// Uses predefined texture file names: "posx.png", "negx.png", "posy.png", "negy.png", "posz.png", "negz.png"
 	// Uses vertex, index and normals data from
@@ -33,7 +35,10 @@ namespace CommonLibOgl
 
 		void rotateCameraX(GLfloat angleDegrees);
 		void rotateCameraY(GLfloat angleDegrees);
+
+#if 0
 		void rotateCameraZ(GLfloat angleDegrees);
+#endif
 
 		GLfloat getCameraScale() const;
 
@@ -62,4 +67,5 @@ namespace CommonLibOgl
 
 		GLuint m_texture;
 	};
+#endif
 }

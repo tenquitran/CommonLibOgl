@@ -7,6 +7,9 @@ using namespace CommonLibOgl;
 //////////////////////////////////////////////////////////////////////////
 
 
+// TODO: fix and uncomment
+#if 0
+
 Cubemap::Cubemap(Camera& camera, GLfloat side, const std::string& textureDir)
 	: m_camera(camera), m_cubeSide(side), m_textureDir(textureDir), 
 	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_texture{}
@@ -232,12 +235,14 @@ void Cubemap::rotateCameraY(GLfloat angleDegrees)
 	updateViewMatrices();
 }
 
+#if 0
 void Cubemap::rotateCameraZ(GLfloat angleDegrees)
 {
 	m_camera.rotateZ(angleDegrees);
 
 	updateViewMatrices();
 }
+#endif
 
 GLfloat Cubemap::getCameraScale() const
 {
@@ -271,3 +276,5 @@ void Cubemap::render() const
 	glBindVertexArray(0);
 	glUseProgram(0);
 }
+
+#endif

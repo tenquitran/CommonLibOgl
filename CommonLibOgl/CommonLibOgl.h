@@ -23,6 +23,7 @@
 #include <glm/glm.hpp>       // the most common GLM headers
 #include <glm/gtc/matrix_transform.hpp>    // matrix transformations: glm::perspective(), etc.
 #include <glm/gtc/type_ptr.hpp>            // glm::value_ptr() to pass matrices to shaders, etc.
+#include <glm/gtx/euler_angles.hpp>        // glm::yawPitchRoll()
 #pragma warning(pop)
 
 
