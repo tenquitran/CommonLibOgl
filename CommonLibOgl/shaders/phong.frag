@@ -37,6 +37,8 @@ void main()
 	vec3 diffuse = Light.diffuse * Material.diffuse * max(dot(s, n), 0.0);
 	vec3 specular = Light.specular * Material.specular * pow(max(dot(r, v), 0.0), Material.shininess);
 
+	//outColor = vec4(diffuse, 1.0);
+	//outColor = vec4(ambient + specular, 1.0);
 	outColor = vec4(ambient + diffuse + specular, 1.0);
 
 	// TODO: hard-coded color
