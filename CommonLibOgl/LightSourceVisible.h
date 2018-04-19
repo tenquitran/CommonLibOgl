@@ -22,7 +22,9 @@ namespace CommonLibOgl
 		virtual void render() const override;
 
 	private:
+#if 0
 		const Camera& m_camera;
+#endif
 
 		const float m_cubeSide;
 

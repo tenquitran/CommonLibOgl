@@ -7,8 +7,11 @@ using namespace CommonLibOgl;
 //////////////////////////////////////////////////////////////////////////
 
 
-Cube::Cube(GLuint program, const Camera& camera, GLfloat side, const MaterialPhong& material)
-	: m_program(program), m_camera(camera), m_cubeSide(side), m_material(material), 
+Cube::Cube(GLuint program, const Camera& camera, glm::vec3 position, GLfloat side, const MaterialPhong& material)
+	: Renderable(camera),
+	  m_program(program), //m_camera(camera), 
+	  m_position(position),
+	  m_cubeSide(side), m_material(material), 
 	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}
 {
 	if (!m_program)
@@ -23,35 +26,35 @@ Cube::Cube(GLuint program, const Camera& camera, GLfloat side, const MaterialPho
 
 	GLfloat vertices[] = {
 		// Front
-		-HalfSide, -HalfSide, HalfSide,
-		HalfSide, -HalfSide, HalfSide,
-		HalfSide, HalfSide, HalfSide,
-		-HalfSide, HalfSide, HalfSide,
+		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
+		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
+		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
+		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
 		// Right
-		HalfSide, -HalfSide, HalfSide,
-		HalfSide, -HalfSide, -HalfSide,
-		HalfSide, HalfSide, -HalfSide,
-		HalfSide, HalfSide, HalfSide,
+		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
+		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
+		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
+		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
 		// Back
-		-HalfSide, -HalfSide, -HalfSide,
-		-HalfSide, HalfSide, -HalfSide,
-		HalfSide, HalfSide, -HalfSide,
-		HalfSide, -HalfSide, -HalfSide,
+		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
+		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
+		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
+		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
 		// Left
-		-HalfSide, -HalfSide, HalfSide,
-		-HalfSide, HalfSide, HalfSide,
-		-HalfSide, HalfSide, -HalfSide,
-		-HalfSide, -HalfSide, -HalfSide,
+		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
+		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
+		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
+		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
 		// Bottom
-		-HalfSide, -HalfSide, HalfSide,
-		-HalfSide, -HalfSide, -HalfSide,
-		HalfSide, -HalfSide, -HalfSide,
-		HalfSide, -HalfSide, HalfSide,
+		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
+		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
+		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
+		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
 		// Top
-		-HalfSide, HalfSide, HalfSide,
-		HalfSide, HalfSide, HalfSide,
-		HalfSide, HalfSide, -HalfSide,
-		-HalfSide, HalfSide, -HalfSide
+		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
+		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
+		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
+		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z - HalfSide
 	};
 
 	// Set up the vertex buffer.

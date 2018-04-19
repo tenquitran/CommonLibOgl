@@ -12,9 +12,10 @@ namespace CommonLibOgl
 	public:
 		// Parameters: program - GLSL program ID;
 		//             camera - scene camera;
+		//             position - cube position in the scene;
 		//             side - cube side length;
 		//             material - Phong material properties.
-		Cube(GLuint program, const Camera& camera, GLfloat side, const MaterialPhong& material);
+		Cube(GLuint program, const Camera& camera, glm::vec3 position, GLfloat side, const MaterialPhong& material);
 
 		virtual ~Cube();
 
@@ -30,7 +31,11 @@ namespace CommonLibOgl
 	private:
 		const GLuint m_program;    // GLSL program ID
 
+		glm::vec3 m_position;    // position in the scene
+
+#if 0
 		const Camera& m_camera;
+#endif
 
 		const GLfloat m_cubeSide;
 

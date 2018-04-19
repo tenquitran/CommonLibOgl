@@ -8,7 +8,9 @@ using namespace CommonLibOgl;
 
 
 LightSourceVisible::LightSourceVisible(const Camera& camera, float cubeSide, const glm::vec3& color)
-	: m_camera(camera), m_cubeSide(cubeSide), m_colorEmissive(color), m_vao{}, m_vbo{}, m_index{}, m_indexCount{}
+	: Renderable(camera),
+	//m_camera(camera), 
+	m_cubeSide(cubeSide), m_colorEmissive(color), m_vao{}, m_vbo{}, m_index{}, m_indexCount{}
 {
 	const ShaderCollection shaders = {
 		{ GL_VERTEX_SHADER,   "shaders\\lightSourceVisible.vert" },
