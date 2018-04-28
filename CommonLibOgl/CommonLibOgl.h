@@ -56,6 +56,7 @@
 #include "LightSourceVisible.h"
 #include "Cube.h"
 #include "Cubemap.h"
+#include "PlaneHorizontal.h"
 
 
 namespace CommonLibOgl

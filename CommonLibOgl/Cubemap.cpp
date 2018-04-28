@@ -7,11 +7,8 @@ using namespace CommonLibOgl;
 //////////////////////////////////////////////////////////////////////////
 
 
-// TODO: fix and uncomment
-#if 0
-
 Cubemap::Cubemap(Camera& camera, GLfloat side, const std::string& textureDir)
-	: m_camera(camera), m_cubeSide(side), m_textureDir(textureDir), 
+	: Renderable(camera), m_side(side), m_textureDir(textureDir), 
 	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_texture{}
 {
 	// Initialize the program wrapper.
@@ -26,7 +23,7 @@ Cubemap::Cubemap(Camera& camera, GLfloat side, const std::string& textureDir)
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
 
-	const GLfloat HalfSide = m_cubeSide / 2.0f;
+	const GLfloat HalfSide = m_side / 2.0f;
 
 	GLfloat vertices[] = {
 		// Front
@@ -102,7 +99,7 @@ Cubemap::Cubemap(Camera& camera, GLfloat side, const std::string& textureDir)
 	}
 
 	// Initialize matrices according to the camera state.
-	updateViewMatrices();
+	updateMatrices();
 }
 
 Cubemap::~Cubemap()
@@ -185,7 +182,7 @@ bool Cubemap::loadCubemapTextures()
 	return true;
 }
 
-void Cubemap::updateViewMatrices() const
+void Cubemap::updateMatrices() const
 {
 	assert(m_spProgram->getProgram());
 
@@ -204,35 +201,35 @@ void Cubemap::translateCameraX(GLfloat diff)
 {
 	m_camera.translateX(diff);
 
-	updateViewMatrices();
+	updateMatrices();
 }
 
 void Cubemap::translateCameraY(GLfloat diff)
 {
 	m_camera.translateY(diff);
 
-	updateViewMatrices();
+	updateMatrices();
 }
 
 void Cubemap::translateCameraZ(GLfloat diff)
 {
 	m_camera.translateZ(diff);
 
-	updateViewMatrices();
+	updateMatrices();
 }
 
 void Cubemap::rotateCameraX(GLfloat angleDegrees)
 {
 	m_camera.rotateX(angleDegrees);
 
-	updateViewMatrices();
+	updateMatrices();
 }
 
 void Cubemap::rotateCameraY(GLfloat angleDegrees)
 {
 	m_camera.rotateY(angleDegrees);
 
-	updateViewMatrices();
+	updateMatrices();
 }
 
 #if 0
@@ -253,7 +250,7 @@ void Cubemap::scaleCamera(GLfloat amount)
 {
 	m_camera.scale(amount);
 
-	updateViewMatrices();
+	updateMatrices();
 }
 
 void Cubemap::render() const
@@ -276,5 +273,3 @@ void Cubemap::render() const
 	glBindVertexArray(0);
 	glUseProgram(0);
 }
-
-#endif

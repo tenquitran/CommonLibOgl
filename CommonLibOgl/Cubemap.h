@@ -3,8 +3,6 @@
 
 namespace CommonLibOgl
 {
-	// TODO: fix and uncomment
-#if 0
 	// Cubemap.
 	// Uses predefined texture file names: "posx.png", "negx.png", "posy.png", "negy.png", "posz.png", "negz.png"
 	// Uses vertex, index and normals data from
@@ -21,7 +19,7 @@ namespace CommonLibOgl
 		virtual ~Cubemap();
 
 		// Update Model-View-Projection (MVP) and other matrices in the GLSL program.
-		virtual void updateViewMatrices() const override;
+		virtual void updateMatrices() const override;
 
 		virtual void render() const override;
 
@@ -51,9 +49,7 @@ namespace CommonLibOgl
 		bool loadCubemapTextures();
 
 	private:
-		Camera& m_camera;
-
-		const GLfloat m_cubeSide;
+		const GLfloat m_side;
 
 		const std::string& m_textureDir;    // full or partial path to directory with cubemap textures
 
@@ -67,5 +63,4 @@ namespace CommonLibOgl
 
 		GLuint m_texture;
 	};
-#endif
 }

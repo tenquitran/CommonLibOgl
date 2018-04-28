@@ -15,12 +15,12 @@ namespace CommonLibOgl
 		//             position - cube position in the scene;
 		//             side - cube side length;
 		//             material - Phong material properties.
-		Cube(GLuint program, const Camera& camera, glm::vec3 position, GLfloat side, const MaterialPhong& material);
+		Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat side, const MaterialPhong& material);
 
 		virtual ~Cube();
 
 		// Update Model-View-Projection (MVP) and other matrices in the GLSL program.
-		virtual void updateViewMatrices() const override;
+		virtual void updateMatrices() const override;
 
 		virtual void render() const override;
 
@@ -33,11 +33,7 @@ namespace CommonLibOgl
 
 		glm::vec3 m_position;    // position in the scene
 
-#if 0
-		const Camera& m_camera;
-#endif
-
-		const GLfloat m_cubeSide;
+		const GLfloat m_side;
 
 		const MaterialPhong m_material;
 

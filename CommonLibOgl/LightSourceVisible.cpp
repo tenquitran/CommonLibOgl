@@ -7,10 +7,9 @@ using namespace CommonLibOgl;
 //////////////////////////////////////////////////////////////////////////
 
 
-LightSourceVisible::LightSourceVisible(const Camera& camera, float cubeSide, const glm::vec3& color)
+LightSourceVisible::LightSourceVisible(Camera& camera, float cubeSide, const glm::vec3& color)
 	: Renderable(camera),
-	//m_camera(camera), 
-	m_cubeSide(cubeSide), m_colorEmissive(color), m_vao{}, m_vbo{}, m_index{}, m_indexCount{}
+	  m_side(cubeSide), m_colorEmissive(color), m_vao{}, m_vbo{}, m_index{}, m_indexCount{}
 {
 	const ShaderCollection shaders = {
 		{ GL_VERTEX_SHADER,   "shaders\\lightSourceVisible.vert" },
@@ -22,7 +21,7 @@ LightSourceVisible::LightSourceVisible(const Camera& camera, float cubeSide, con
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
 
-	const float HalfSide = m_cubeSide / 2.0f;
+	const float HalfSide = m_side / 2.0f;
 
 	float vertices[] = {
 		// Front
@@ -100,7 +99,7 @@ LightSourceVisible::LightSourceVisible(const Camera& camera, float cubeSide, con
 	}
 
 	// Initialize matrices according to the camera state.
-	updateViewMatrices();
+	updateMatrices();
 }
 
 LightSourceVisible::~LightSourceVisible()
@@ -125,7 +124,7 @@ LightSourceVisible::~LightSourceVisible()
 	}
 }
 
-void LightSourceVisible::updateViewMatrices() const
+void LightSourceVisible::updateMatrices() const
 {
 	assert(m_spProgram);
 
@@ -139,7 +138,7 @@ void LightSourceVisible::updateViewMatrices() const
 void LightSourceVisible::render() const
 {
 	// TODO: move?
-	updateViewMatrices();
+	updateMatrices();
 
 	assert(m_spProgram);
 

@@ -7,9 +7,9 @@ using namespace CommonLibOgl;
 //////////////////////////////////////////////////////////////////////////
 
 
-Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat side, const MaterialPhong& material)
+PlaneHorizontal::PlaneHorizontal(GLuint program, Camera& camera, const glm::vec3& center, GLfloat side, const MaterialPhong& material)
 	: Renderable(camera),
-	  m_program(program), m_position(position), m_side(side), m_material(material), 
+	  m_program(program), m_center(center), m_side(side), m_material(material),
 	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}
 {
 	if (!m_program)
@@ -20,40 +20,16 @@ Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat si
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
 
-	const GLfloat HalfSide = m_side / 2.0f;
+	//const GLfloat HalfSide = m_side / 2.0f;
+
+	// Vertical and horizontal offset from the center of the plane to its corners.
+	const GLfloat offset = sqrt(2.0f) * (m_side / 2.0f);
 
 	GLfloat vertices[] = {
-		// Front
-		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
-		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
-		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
-		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
-		// Right
-		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
-		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
-		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
-		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
-		// Back
-		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
-		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
-		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
-		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
-		// Left
-		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
-		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
-		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
-		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
-		// Bottom
-		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
-		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
-		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
-		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
-		// Top
-		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
-		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
-		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
-		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z - HalfSide
-	};
+		center.x - offset, center.y, center.z - offset,
+		center.x + offset, center.y, center.z - offset,
+		center.x + offset, center.y, center.z + offset,
+		center.x - offset, center.y, center.z + offset };
 
 	// Set up the vertex buffer.
 
@@ -65,16 +41,9 @@ Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat si
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(0);
 
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 	GLuint indices[] = {
-		0, 1, 2, 0, 2, 3,
-		4, 5, 6, 4, 6, 7,
-		8, 9, 10, 8, 10, 11,
-		12, 13, 14, 12, 14, 15,
-		16, 17, 18, 16, 18, 19,
-		20, 21, 22, 20, 22, 23
-	};
+		0, 1, 2,
+		0, 2, 3 };
 
 	// Set up the index buffer.
 
@@ -85,40 +54,9 @@ Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat si
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, _countof(indices) * sizeof(indices[0]), indices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	GLfloat normals[] = {
-		// Front
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		// Right
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		// Back
-		0.0f, 0.0f, -1.0f,
-		0.0f, 0.0f, -1.0f,
-		0.0f, 0.0f, -1.0f,
-		0.0f, 0.0f, -1.0f,
-		// Left
-		-1.0f, 0.0f, 0.0f,
-		-1.0f, 0.0f, 0.0f,
-		-1.0f, 0.0f, 0.0f,
-		-1.0f, 0.0f, 0.0f,
-		// Bottom
-		0.0f, -1.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		// Top
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f
-	};
-
 	// Set up the normal buffer.
+
+	GLfloat normals[] = {0.0f, 1.0f, 0.0f};
 
 	glGenBuffers(1, &m_normal);
 	glBindBuffer(GL_ARRAY_BUFFER, m_normal);
@@ -163,7 +101,7 @@ Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat si
 	updateMatrices();
 }
 
-Cube::~Cube()
+PlaneHorizontal::~PlaneHorizontal()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -190,7 +128,7 @@ Cube::~Cube()
 	}
 }
 
-void Cube::updateMatrices() const
+void PlaneHorizontal::updateMatrices() const
 {
 	assert(m_program);
 
@@ -210,7 +148,7 @@ void Cube::updateMatrices() const
 	glUseProgram(0);
 }
 
-void Cube::render() const
+void PlaneHorizontal::render() const
 {
 	assert(m_program);
 

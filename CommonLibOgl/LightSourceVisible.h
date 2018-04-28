@@ -12,21 +12,17 @@ namespace CommonLibOgl
 	public:
 		// Parameters: cubeSide - size of the light source cube side;
 		//             color - light color.
-		LightSourceVisible(const Camera& camera, float cubeSide, const glm::vec3& color);
+		LightSourceVisible(Camera& camera, float cubeSide, const glm::vec3& color);
 
 		virtual ~LightSourceVisible();
 
 		// Update Model-View-Projection (MVP) and other matrices in the GLSL program.
-		virtual void updateViewMatrices() const override;
+		virtual void updateMatrices() const override;
 
 		virtual void render() const override;
 
 	private:
-#if 0
-		const Camera& m_camera;
-#endif
-
-		const float m_cubeSide;
+		const float m_side;
 
 		// For simplicity, the light source has only the emissive color.
 		const glm::vec3 m_colorEmissive;
