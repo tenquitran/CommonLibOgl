@@ -10,7 +10,7 @@ using namespace CommonLibOgl;
 Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat side, const MaterialPhong& material)
 	: Renderable(camera),
 	  m_program(program), m_position(position), m_side(side), m_material(material), 
-	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}, m_scaleFactor(1.0f)
+	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}
 {
 	if (!m_program)
 	{
@@ -196,8 +196,8 @@ void Cube::updateMatrices() const
 
 	glUseProgram(m_program);
 
-	glm::mat4 proj = m_camera.getProjectionMatrix();
-	glm::mat4 view = m_camera.getViewMatrix();
+	glm::mat4 proj  = m_camera.getProjectionMatrix();
+	glm::mat4 view  = m_camera.getViewMatrix();
 	glm::mat4 model = m_camera.getModelMatrix();
 
 	// Apply translation.
@@ -233,35 +233,35 @@ void Cube::updateMatrices() const
 
 void Cube::translate(const glm::vec3& diff)
 {
-	m_translation += diff;
+	applyTranslation(diff);
 
 	updateMatrices();
 }
 
 void Cube::rotateX(GLfloat degrees)
 {
-	m_rotationDegrees.x += degrees;
+	applyRotationX(degrees);
 
 	updateMatrices();
 }
 
 void Cube::rotateY(GLfloat degrees)
 {
-	m_rotationDegrees.y += degrees;
+	applyRotationY(degrees);
 
 	updateMatrices();
 }
 
 void Cube::rotateZ(GLfloat degrees)
 {
-	m_rotationDegrees.z += degrees;
+	applyRotationZ(degrees);
 
 	updateMatrices();
 }
 
 void Cube::scale(GLfloat amount)
 {
-	m_scaleFactor += amount;
+	applyScaling(amount);
 
 	updateMatrices();
 }

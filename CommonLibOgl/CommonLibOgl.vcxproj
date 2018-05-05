@@ -84,6 +84,7 @@
     <ClInclude Include="Exception.h" />
     <ClInclude Include="LightSourceVisible.h" />
     <ClInclude Include="MaterialPhong.h" />
+    <ClInclude Include="Movable.h" />
     <ClInclude Include="OpenGLInfo.h" />
     <ClInclude Include="PlaneHorizontal.h" />
     <ClInclude Include="Renderable.h" />
@@ -99,6 +100,7 @@
     <ClCompile Include="Cubemap.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="LightSourceVisible.cpp" />
+    <ClCompile Include="Movable.cpp" />
     <ClCompile Include="PlaneHorizontal.cpp" />
     <ClCompile Include="ProgramGLSL.cpp" />
     <ClCompile Include="stdafx.cpp">

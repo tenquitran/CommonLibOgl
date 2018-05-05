@@ -3,6 +3,7 @@
 
 namespace CommonLibOgl
 {
+	// Base class for the renderable primitives.
 	class Renderable
 	{
 	public:

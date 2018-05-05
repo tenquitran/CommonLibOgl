@@ -7,7 +7,8 @@ namespace CommonLibOgl
 	// Uses vertex, index and normals data from
 	// https://github.com/daw42/glslcookbook/blob/master/ingredients/vbocube.cpp
 	class Cube
-		: public Renderable
+		: public Renderable, 
+		  public Movable
 	{
 	public:
 		// Parameters: program - GLSL program ID;
@@ -52,11 +53,5 @@ namespace CommonLibOgl
 		GLsizei m_indexCount;    // number of indices
 
 		GLuint m_normal;         // normal buffer
-
-		glm::vec3 m_translation;
-
-		glm::vec3 m_rotationDegrees;
-
-		GLfloat m_scaleFactor;
 	};
 }
