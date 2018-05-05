@@ -24,6 +24,14 @@ namespace CommonLibOgl
 
 		virtual void render() const override;
 
+		void translate(const glm::vec3& diff);
+
+		void rotateX(GLfloat degrees);
+		void rotateY(GLfloat degrees);
+		void rotateZ(GLfloat degrees);
+
+		void scale(GLfloat amount);
+
 	private:
 		Cube(const Cube&) = delete;
 		Cube& operator=(const Cube&) = delete;
@@ -44,5 +52,11 @@ namespace CommonLibOgl
 		GLsizei m_indexCount;    // number of indices
 
 		GLuint m_normal;         // normal buffer
+
+		glm::vec3 m_translation;
+
+		glm::vec3 m_rotationDegrees;
+
+		GLfloat m_scaleFactor;
 	};
 }

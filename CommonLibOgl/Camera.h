@@ -39,11 +39,11 @@ namespace CommonLibOgl
 		void translateY(GLfloat diff);
 		void translateZ(GLfloat diff);
 
-		void rotateX(GLfloat angleDegrees);
-		void rotateY(GLfloat angleDegrees);
-		void rotateZ(GLfloat angleDegrees);
+		void rotateX(GLfloat degrees);
+		void rotateY(GLfloat degrees);
+		void rotateZ(GLfloat degrees);
 
-		void rotateXY(GLfloat xAngleDegrees, GLfloat yAngleDegrees);
+		void rotateXY(GLfloat xDegrees, GLfloat yDegrees);
 
 		GLfloat getScale() const;
 

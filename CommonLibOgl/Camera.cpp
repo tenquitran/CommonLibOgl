@@ -82,25 +82,25 @@ void Camera::translateZ(GLfloat diff)
 	m_translation.z += diff;
 }
 
-void Camera::rotateX(GLfloat angleDegrees)
+void Camera::rotateX(GLfloat degrees)
 {
-	m_rotationDegrees.x += angleDegrees;
+	m_rotationDegrees.x += degrees;
 }
 
-void Camera::rotateY(GLfloat angleDegrees)
+void Camera::rotateY(GLfloat degrees)
 {
-	m_rotationDegrees.y += angleDegrees;
+	m_rotationDegrees.y += degrees;
 }
 
-void Camera::rotateZ(GLfloat angleDegrees)
+void Camera::rotateZ(GLfloat degrees)
 {
-	m_rotationDegrees.z += angleDegrees;
+	m_rotationDegrees.z += degrees;
 }
 
-void Camera::rotateXY(GLfloat xAngleDegrees, GLfloat yAngleDegrees)
+void Camera::rotateXY(GLfloat xDegrees, GLfloat yDegrees)
 {
-	m_rotationDegrees.x += xAngleDegrees;
-	m_rotationDegrees.y += yAngleDegrees;
+	m_rotationDegrees.x += xDegrees;
+	m_rotationDegrees.y += yDegrees;
 }
 
 GLfloat Camera::getScale() const

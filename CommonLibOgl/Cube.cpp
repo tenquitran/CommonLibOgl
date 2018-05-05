@@ -10,7 +10,7 @@ using namespace CommonLibOgl;
 Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat side, const MaterialPhong& material)
 	: Renderable(camera),
 	  m_program(program), m_position(position), m_side(side), m_material(material), 
-	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}
+	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}, m_scaleFactor(1.0f)
 {
 	if (!m_program)
 	{
@@ -196,9 +196,30 @@ void Cube::updateMatrices() const
 
 	glUseProgram(m_program);
 
-	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(m_camera.getModelViewProjectionMatrix()));
+	glm::mat4 proj = m_camera.getProjectionMatrix();
+	glm::mat4 view = m_camera.getViewMatrix();
+	glm::mat4 model = m_camera.getModelMatrix();
 
-	glm::mat4 mv = m_camera.getModelViewMatrix();
+	// Apply translation.
+	model *= glm::translate(glm::mat4(1.0f), m_translation);
+
+	// Apply rotation.
+	model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.x), glm::vec3(1.0f, 0.0f, 0.0));    // X axis
+	model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.y), glm::vec3(0.0f, 1.0f, 0.0));    // Y axis
+	model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.z), glm::vec3(0.0f, 0.0f, 1.0));    // Z axis
+
+	// Apply scaling.
+	model *= glm::scale(glm::mat4(1.0f), glm::vec3(m_scaleFactor));
+
+	glm::mat4 mv = view * model;
+
+	glm::mat4 mvp = proj * view * model;
+
+	assert(m_program);
+
+	glUseProgram(m_program);
+
+	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(mvp));
 
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(mv));
 
@@ -210,9 +231,46 @@ void Cube::updateMatrices() const
 	glUseProgram(0);
 }
 
+void Cube::translate(const glm::vec3& diff)
+{
+	m_translation += diff;
+
+	updateMatrices();
+}
+
+void Cube::rotateX(GLfloat degrees)
+{
+	m_rotationDegrees.x += degrees;
+
+	updateMatrices();
+}
+
+void Cube::rotateY(GLfloat degrees)
+{
+	m_rotationDegrees.y += degrees;
+
+	updateMatrices();
+}
+
+void Cube::rotateZ(GLfloat degrees)
+{
+	m_rotationDegrees.z += degrees;
+
+	updateMatrices();
+}
+
+void Cube::scale(GLfloat amount)
+{
+	m_scaleFactor += amount;
+
+	updateMatrices();
+}
+
 void Cube::render() const
 {
 	assert(m_program);
+
+	updateMatrices();    // required for the independent movement
 
 	glUseProgram(m_program);
 	glBindVertexArray(m_vao);
