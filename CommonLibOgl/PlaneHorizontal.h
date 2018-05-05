@@ -17,6 +17,9 @@ namespace CommonLibOgl
 		virtual void render() const override;
 
 	private:
+		void setMaterialProperties() const;
+
+	private:
 		const GLuint m_program;    // GLSL program ID
 
 		glm::vec3 m_center;

@@ -7,6 +7,7 @@ namespace CommonLibOgl
 	class Renderable
 	{
 	public:
+		// Parameters: camera - scene camera.
 		explicit Renderable(Camera& camera)
 			: m_camera(camera)
 		{

@@ -56,7 +56,11 @@ PlaneHorizontal::PlaneHorizontal(GLuint program, Camera& camera, const glm::vec3
 
 	// Set up the normal buffer.
 
-	GLfloat normals[] = {0.0f, 1.0f, 0.0f};
+	GLfloat normals[] = {
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f };
 
 	glGenBuffers(1, &m_normal);
 	glBindBuffer(GL_ARRAY_BUFFER, m_normal);
@@ -66,36 +70,9 @@ PlaneHorizontal::PlaneHorizontal(GLuint program, Camera& camera, const glm::vec3
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(1);
 
-	// Set material properties.
-
-	glUseProgram(m_program);
-
-	GLuint mAmbient = glGetUniformLocation(m_program, "Material.ambient");
-	if (-1 != mAmbient)
-	{
-		glUniform3fv(mAmbient, 1, glm::value_ptr(m_material.m_ambientColor));
-	}
-
-	GLuint mDiffuse = glGetUniformLocation(m_program, "Material.diffuse");
-	if (-1 != mDiffuse)
-	{
-		glUniform3fv(mDiffuse, 1, glm::value_ptr(m_material.m_diffuseColor));
-	}
-
-	GLuint mSpecular = glGetUniformLocation(m_program, "Material.specular");
-	if (-1 != mSpecular)
-	{
-		glUniform3fv(mSpecular, 1, glm::value_ptr(m_material.m_specularColor));
-	}
-
-	GLuint mShininess = glGetUniformLocation(m_program, "Material.shininess");
-	if (-1 != mShininess)
-	{
-		glUniform1f(mShininess, m_material.m_shininess);
-	}
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glUseProgram(0);
+
+	setMaterialProperties();
 
 	// Initialize matrices according to the camera state.
 	updateMatrices();
@@ -128,6 +105,37 @@ PlaneHorizontal::~PlaneHorizontal()
 	}
 }
 
+void PlaneHorizontal::setMaterialProperties() const
+{
+	glUseProgram(m_program);
+
+	GLuint mAmbient = glGetUniformLocation(m_program, "Material.ambient");
+	if (-1 != mAmbient)
+	{
+		glUniform3fv(mAmbient, 1, glm::value_ptr(m_material.m_ambientColor));
+	}
+
+	GLuint mDiffuse = glGetUniformLocation(m_program, "Material.diffuse");
+	if (-1 != mDiffuse)
+	{
+		glUniform3fv(mDiffuse, 1, glm::value_ptr(m_material.m_diffuseColor));
+	}
+
+	GLuint mSpecular = glGetUniformLocation(m_program, "Material.specular");
+	if (-1 != mSpecular)
+	{
+		glUniform3fv(mSpecular, 1, glm::value_ptr(m_material.m_specularColor));
+	}
+
+	GLuint mShininess = glGetUniformLocation(m_program, "Material.shininess");
+	if (-1 != mShininess)
+	{
+		glUniform1f(mShininess, m_material.m_shininess);
+	}
+
+	glUseProgram(0);
+}
+
 void PlaneHorizontal::updateMatrices() const
 {
 	assert(m_program);
@@ -151,6 +159,10 @@ void PlaneHorizontal::updateMatrices() const
 void PlaneHorizontal::render() const
 {
 	assert(m_program);
+
+	setMaterialProperties();
+
+	updateMatrices();    // required for the independent movement
 
 	glUseProgram(m_program);
 	glBindVertexArray(m_vao);

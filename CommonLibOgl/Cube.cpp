@@ -65,8 +65,6 @@ Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat si
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(0);
 
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 	GLuint indices[] = {
 		0, 1, 2, 0, 2, 3,
 		4, 5, 6, 4, 6, 7,
@@ -128,36 +126,9 @@ Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat si
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(1);
 
-	// Set material properties.
-
-	glUseProgram(m_program);
-
-	GLuint mAmbient = glGetUniformLocation(m_program, "Material.ambient");
-	if (-1 != mAmbient)
-	{
-		glUniform3fv(mAmbient, 1, glm::value_ptr(m_material.m_ambientColor));
-	}
-
-	GLuint mDiffuse = glGetUniformLocation(m_program, "Material.diffuse");
-	if (-1 != mDiffuse)
-	{
-		glUniform3fv(mDiffuse, 1, glm::value_ptr(m_material.m_diffuseColor));
-	}
-
-	GLuint mSpecular = glGetUniformLocation(m_program, "Material.specular");
-	if (-1 != mSpecular)
-	{
-		glUniform3fv(mSpecular, 1, glm::value_ptr(m_material.m_specularColor));
-	}
-
-	GLuint mShininess = glGetUniformLocation(m_program, "Material.shininess");
-	if (-1 != mShininess)
-	{
-		glUniform1f(mShininess, m_material.m_shininess);
-	}
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glUseProgram(0);
+
+	setMaterialProperties();
 
 	// Initialize matrices according to the camera state.
 	updateMatrices();
@@ -188,6 +159,37 @@ Cube::~Cube()
 		glBindVertexArray(0);
 		glDeleteVertexArrays(1, &m_vao);
 	}
+}
+
+void Cube::setMaterialProperties() const
+{
+	glUseProgram(m_program);
+
+	GLuint mAmbient = glGetUniformLocation(m_program, "Material.ambient");
+	if (-1 != mAmbient)
+	{
+		glUniform3fv(mAmbient, 1, glm::value_ptr(m_material.m_ambientColor));
+	}
+
+	GLuint mDiffuse = glGetUniformLocation(m_program, "Material.diffuse");
+	if (-1 != mDiffuse)
+	{
+		glUniform3fv(mDiffuse, 1, glm::value_ptr(m_material.m_diffuseColor));
+	}
+
+	GLuint mSpecular = glGetUniformLocation(m_program, "Material.specular");
+	if (-1 != mSpecular)
+	{
+		glUniform3fv(mSpecular, 1, glm::value_ptr(m_material.m_specularColor));
+	}
+
+	GLuint mShininess = glGetUniformLocation(m_program, "Material.shininess");
+	if (-1 != mShininess)
+	{
+		glUniform1f(mShininess, m_material.m_shininess);
+	}
+
+	glUseProgram(0);
 }
 
 void Cube::updateMatrices() const
@@ -269,6 +271,8 @@ void Cube::scale(GLfloat amount)
 void Cube::render() const
 {
 	assert(m_program);
+
+	setMaterialProperties();
 
 	updateMatrices();    // required for the independent movement
 

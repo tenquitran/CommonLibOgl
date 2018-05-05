@@ -37,6 +37,8 @@ namespace CommonLibOgl
 		Cube(const Cube&) = delete;
 		Cube& operator=(const Cube&) = delete;
 
+		void setMaterialProperties() const;
+
 	private:
 		const GLuint m_program;    // GLSL program ID
 
