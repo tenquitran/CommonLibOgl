@@ -72,9 +72,6 @@
     <ClInclude Include="PlaneHorizontal.h">
       <Filter>Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="Movable.h">
-      <Filter>Primitives</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -104,7 +101,7 @@
     <ClCompile Include="PlaneHorizontal.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="Movable.cpp">
+    <ClCompile Include="Renderable.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
   </ItemGroup>

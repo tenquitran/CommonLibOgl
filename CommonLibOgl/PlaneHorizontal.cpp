@@ -8,28 +8,20 @@ using namespace CommonLibOgl;
 
 
 PlaneHorizontal::PlaneHorizontal(GLuint program, Camera& camera, const glm::vec3& center, GLfloat side, const MaterialPhong& material)
-	: Renderable(camera),
-	  m_program(program), m_center(center), m_side(side), m_material(material),
-	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}
+	: Renderable(program, camera, center),
+	  m_side(side), m_material(material), m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}
 {
-	if (!m_program)
-	{
-		assert(false); throw EXCEPTION(L"Invalid GLSL program");
-	}
-
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
-
-	//const GLfloat HalfSide = m_side / 2.0f;
 
 	// Vertical and horizontal offset from the center of the plane to its corners.
 	const GLfloat offset = sqrt(2.0f) * (m_side / 2.0f);
 
 	GLfloat vertices[] = {
-		center.x - offset, center.y, center.z - offset,
-		center.x + offset, center.y, center.z - offset,
-		center.x + offset, center.y, center.z + offset,
-		center.x - offset, center.y, center.z + offset };
+		m_posInitial.x - offset, m_posInitial.y, m_posInitial.z - offset,
+		m_posInitial.x + offset, m_posInitial.y, m_posInitial.z - offset,
+		m_posInitial.x + offset, m_posInitial.y, m_posInitial.z + offset,
+		m_posInitial.x - offset, m_posInitial.y, m_posInitial.z + offset };
 
 	// Set up the vertex buffer.
 
@@ -107,27 +99,27 @@ PlaneHorizontal::~PlaneHorizontal()
 
 void PlaneHorizontal::setMaterialProperties() const
 {
-	glUseProgram(m_program);
+	glUseProgram(m_programId);
 
-	GLuint mAmbient = glGetUniformLocation(m_program, "Material.ambient");
+	GLuint mAmbient = glGetUniformLocation(m_programId, "Material.ambient");
 	if (-1 != mAmbient)
 	{
 		glUniform3fv(mAmbient, 1, glm::value_ptr(m_material.m_ambientColor));
 	}
 
-	GLuint mDiffuse = glGetUniformLocation(m_program, "Material.diffuse");
+	GLuint mDiffuse = glGetUniformLocation(m_programId, "Material.diffuse");
 	if (-1 != mDiffuse)
 	{
 		glUniform3fv(mDiffuse, 1, glm::value_ptr(m_material.m_diffuseColor));
 	}
 
-	GLuint mSpecular = glGetUniformLocation(m_program, "Material.specular");
+	GLuint mSpecular = glGetUniformLocation(m_programId, "Material.specular");
 	if (-1 != mSpecular)
 	{
 		glUniform3fv(mSpecular, 1, glm::value_ptr(m_material.m_specularColor));
 	}
 
-	GLuint mShininess = glGetUniformLocation(m_program, "Material.shininess");
+	GLuint mShininess = glGetUniformLocation(m_programId, "Material.shininess");
 	if (-1 != mShininess)
 	{
 		glUniform1f(mShininess, m_material.m_shininess);
@@ -136,35 +128,15 @@ void PlaneHorizontal::setMaterialProperties() const
 	glUseProgram(0);
 }
 
-void PlaneHorizontal::updateMatrices() const
-{
-	assert(m_program);
-
-	glUseProgram(m_program);
-
-	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(m_camera.getModelViewProjectionMatrix()));
-
-	glm::mat4 mv = m_camera.getModelViewMatrix();
-
-	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(mv));
-
-	glm::mat3 normal = glm::mat3(glm::transpose(glm::inverse(mv)));
-	//glm::mat3 normal = glm::mat3(glm::vec3(mv[0]), glm::vec3(mv[1]), glm::vec3(mv[2]));
-
-	glUniformMatrix3fv(2, 1, GL_FALSE, glm::value_ptr(normal));
-
-	glUseProgram(0);
-}
-
 void PlaneHorizontal::render() const
 {
-	assert(m_program);
+	assert(m_programId);
 
 	setMaterialProperties();
 
 	updateMatrices();    // required for the independent movement
 
-	glUseProgram(m_program);
+	glUseProgram(m_programId);
 	glBindVertexArray(m_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index);

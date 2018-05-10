@@ -7,53 +7,55 @@ using namespace CommonLibOgl;
 //////////////////////////////////////////////////////////////////////////
 
 
-LightSourceVisible::LightSourceVisible(Camera& camera, float cubeSide, const glm::vec3& color)
-	: Renderable(camera),
-	  m_side(cubeSide), m_colorEmissive(color), m_vao{}, m_vbo{}, m_index{}, m_indexCount{}
+LightSourceVisible::LightSourceVisible(Camera& camera, const glm::vec4& position, GLfloat side, const glm::vec3& color)
+	: Renderable(camera, position),
+	  m_side(side), m_colorEmissive(color), m_vao{}, m_vbo{}, m_index{}, m_indexCount{}
 {
 	const ShaderCollection shaders = {
-		{ GL_VERTEX_SHADER,   "shaders\\lightSourceVisible.vert" },
-		{ GL_FRAGMENT_SHADER, "shaders\\lightSourceVisible.frag" }
+		{ GL_VERTEX_SHADER,   "..\\..\\CommonLibOgl\\CommonLibOgl\\shaders\\lightSourceVisible.vert" },
+		{ GL_FRAGMENT_SHADER, "..\\..\\CommonLibOgl\\CommonLibOgl\\shaders\\lightSourceVisible.frag" }
 	};
 
 	m_spProgram = std::make_unique<ProgramGLSL>(shaders);
 
+	m_programId = m_spProgram->getProgram();
+
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
 
-	const float HalfSide = m_side / 2.0f;
+	const GLfloat HalfSide = m_side / 2.0f;
 
-	float vertices[] = {
+	GLfloat vertices[] = {
 		// Front
-		-HalfSide, -HalfSide, HalfSide,
-		 HalfSide, -HalfSide, HalfSide,
-		 HalfSide,  HalfSide, HalfSide,
-		-HalfSide,  HalfSide, HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
 		// Right
-		HalfSide, -HalfSide, HalfSide,
-		HalfSide, -HalfSide, -HalfSide,
-		HalfSide, HalfSide, -HalfSide,
-		HalfSide, HalfSide, HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
 		// Back
-		-HalfSide, -HalfSide, -HalfSide,
-		-HalfSide, HalfSide, -HalfSide,
-		HalfSide, HalfSide, -HalfSide,
-		HalfSide, -HalfSide, -HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
 		// Left
-		-HalfSide, -HalfSide, HalfSide,
-		-HalfSide, HalfSide, HalfSide,
-		-HalfSide, HalfSide, -HalfSide,
-		-HalfSide, -HalfSide, -HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
 		// Bottom
-		-HalfSide, -HalfSide, HalfSide,
-		-HalfSide, -HalfSide, -HalfSide,
-		HalfSide, -HalfSide, -HalfSide,
-		HalfSide, -HalfSide, HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
 		// Top
-		-HalfSide, HalfSide, HalfSide,
-		HalfSide, HalfSide, HalfSide,
-		HalfSide, HalfSide, -HalfSide,
-		-HalfSide, HalfSide, -HalfSide
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide
 	};
 
 	// Set up the vertex buffer.
@@ -126,21 +128,39 @@ LightSourceVisible::~LightSourceVisible()
 
 void LightSourceVisible::updateMatrices() const
 {
-	assert(m_spProgram);
+	glm::mat4 proj = m_camera.getProjectionMatrix();
+	glm::mat4 view = m_camera.getViewMatrix();
+	glm::mat4 model = m_camera.getModelMatrix();
 
-	glUseProgram(m_spProgram->getProgram());
+	// Apply translation.
+	model *= glm::translate(glm::mat4(1.0f), m_translation);
 
-	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(m_camera.getModelViewProjectionMatrix()));
+	// Apply rotation.
+	model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.x), glm::vec3(1.0f, 0.0f, 0.0));    // X axis
+	model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.y), glm::vec3(0.0f, 1.0f, 0.0));    // Y axis
+	model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.z), glm::vec3(0.0f, 0.0f, 1.0));    // Z axis
+
+	// Apply scaling.
+	model *= glm::scale(glm::mat4(1.0f), glm::vec3(m_scaleFactor));
+
+	glm::mat4 mvp = proj * view * model;
+
+	GLuint program = m_spProgram->getProgram();
+	assert(program);
+
+	glUseProgram(program);
+
+	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(mvp));
+	//glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(m_camera.getModelViewProjectinMatrix()));
 
 	glUseProgram(0);
 }
 
 void LightSourceVisible::render() const
 {
-	// TODO: move?
-	updateMatrices();
-
 	assert(m_spProgram);
+
+	updateMatrices();    // required for the independent movement
 
 	glUseProgram(m_spProgram->getProgram());
 	glBindVertexArray(m_vao);

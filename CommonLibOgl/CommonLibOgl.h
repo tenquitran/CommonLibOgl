@@ -53,7 +53,6 @@
 
 // Commonly used graphics primitives, light sources, etc.
 #include "Renderable.h"
-#include "Movable.h"
 #include "LightSourceVisible.h"
 #include "Cube.h"
 #include "Cubemap.h"

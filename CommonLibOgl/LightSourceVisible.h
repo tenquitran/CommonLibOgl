@@ -8,11 +8,14 @@ namespace CommonLibOgl
 	// https://github.com/daw42/glslcookbook/blob/master/ingredients/vbocube.cpp
 	class LightSourceVisible
 		: public Renderable
+		//, public Movable
 	{
 	public:
 		// Parameters: cubeSide - size of the light source cube side;
+		//             position - position in the scene;
+		//             side - side length;
 		//             color - light color.
-		LightSourceVisible(Camera& camera, float cubeSide, const glm::vec3& color);
+		LightSourceVisible(Camera& camera, const glm::vec4& position, GLfloat side, const glm::vec3& color);
 
 		virtual ~LightSourceVisible();
 
@@ -22,7 +25,8 @@ namespace CommonLibOgl
 		virtual void render() const override;
 
 	private:
-		const float m_side;
+		// Side of the cube which is the visual representation of the light source.
+		const GLfloat m_side;
 
 		// For simplicity, the light source has only the emissive color.
 		const glm::vec3 m_colorEmissive;

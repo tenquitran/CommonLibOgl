@@ -8,15 +8,9 @@ using namespace CommonLibOgl;
 
 
 Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat side, const MaterialPhong& material)
-	: Renderable(camera),
-	  m_program(program), m_position(position), m_side(side), m_material(material), 
-	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}
+	: Renderable(program, camera, position),
+	  m_side(side), m_material(material), m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}
 {
-	if (!m_program)
-	{
-		assert(false); throw EXCEPTION(L"Invalid GLSL program");
-	}
-
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
 
@@ -24,35 +18,35 @@ Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat si
 
 	GLfloat vertices[] = {
 		// Front
-		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
-		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
-		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
-		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
 		// Right
-		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
-		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
-		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
-		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
 		// Back
-		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
-		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
-		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
-		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
 		// Left
-		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
-		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
-		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
-		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
 		// Bottom
-		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
-		m_position.x - HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
-		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z - HalfSide,
-		m_position.x + HalfSide, m_position.y - HalfSide, m_position.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
 		// Top
-		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
-		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z + HalfSide,
-		m_position.x + HalfSide, m_position.y + HalfSide, m_position.z - HalfSide,
-		m_position.x - HalfSide, m_position.y + HalfSide, m_position.z - HalfSide
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide
 	};
 
 	// Set up the vertex buffer.
@@ -163,27 +157,27 @@ Cube::~Cube()
 
 void Cube::setMaterialProperties() const
 {
-	glUseProgram(m_program);
+	glUseProgram(m_programId);
 
-	GLuint mAmbient = glGetUniformLocation(m_program, "Material.ambient");
+	GLuint mAmbient = glGetUniformLocation(m_programId, "Material.ambient");
 	if (-1 != mAmbient)
 	{
 		glUniform3fv(mAmbient, 1, glm::value_ptr(m_material.m_ambientColor));
 	}
 
-	GLuint mDiffuse = glGetUniformLocation(m_program, "Material.diffuse");
+	GLuint mDiffuse = glGetUniformLocation(m_programId, "Material.diffuse");
 	if (-1 != mDiffuse)
 	{
 		glUniform3fv(mDiffuse, 1, glm::value_ptr(m_material.m_diffuseColor));
 	}
 
-	GLuint mSpecular = glGetUniformLocation(m_program, "Material.specular");
+	GLuint mSpecular = glGetUniformLocation(m_programId, "Material.specular");
 	if (-1 != mSpecular)
 	{
 		glUniform3fv(mSpecular, 1, glm::value_ptr(m_material.m_specularColor));
 	}
 
-	GLuint mShininess = glGetUniformLocation(m_program, "Material.shininess");
+	GLuint mShininess = glGetUniformLocation(m_programId, "Material.shininess");
 	if (-1 != mShininess)
 	{
 		glUniform1f(mShininess, m_material.m_shininess);
@@ -192,91 +186,15 @@ void Cube::setMaterialProperties() const
 	glUseProgram(0);
 }
 
-void Cube::updateMatrices() const
-{
-	assert(m_program);
-
-	glUseProgram(m_program);
-
-	glm::mat4 proj  = m_camera.getProjectionMatrix();
-	glm::mat4 view  = m_camera.getViewMatrix();
-	glm::mat4 model = m_camera.getModelMatrix();
-
-	// Apply translation.
-	model *= glm::translate(glm::mat4(1.0f), m_translation);
-
-	// Apply rotation.
-	model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.x), glm::vec3(1.0f, 0.0f, 0.0));    // X axis
-	model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.y), glm::vec3(0.0f, 1.0f, 0.0));    // Y axis
-	model *= glm::rotate(glm::mat4(1.0f), glm::radians(m_rotationDegrees.z), glm::vec3(0.0f, 0.0f, 1.0));    // Z axis
-
-	// Apply scaling.
-	model *= glm::scale(glm::mat4(1.0f), glm::vec3(m_scaleFactor));
-
-	glm::mat4 mv = view * model;
-
-	glm::mat4 mvp = proj * view * model;
-
-	assert(m_program);
-
-	glUseProgram(m_program);
-
-	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(mvp));
-
-	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(mv));
-
-	glm::mat3 normal = glm::mat3(glm::transpose(glm::inverse(mv)));
-	//glm::mat3 normal = glm::mat3(glm::vec3(mv[0]), glm::vec3(mv[1]), glm::vec3(mv[2]));
-
-	glUniformMatrix3fv(2, 1, GL_FALSE, glm::value_ptr(normal));
-
-	glUseProgram(0);
-}
-
-void Cube::translate(const glm::vec3& diff)
-{
-	applyTranslation(diff);
-
-	updateMatrices();
-}
-
-void Cube::rotateX(GLfloat degrees)
-{
-	applyRotationX(degrees);
-
-	updateMatrices();
-}
-
-void Cube::rotateY(GLfloat degrees)
-{
-	applyRotationY(degrees);
-
-	updateMatrices();
-}
-
-void Cube::rotateZ(GLfloat degrees)
-{
-	applyRotationZ(degrees);
-
-	updateMatrices();
-}
-
-void Cube::scale(GLfloat amount)
-{
-	applyScaling(amount);
-
-	updateMatrices();
-}
-
 void Cube::render() const
 {
-	assert(m_program);
+	assert(m_programId);
 
 	setMaterialProperties();
 
 	updateMatrices();    // required for the independent movement
 
-	glUseProgram(m_program);
+	glUseProgram(m_programId);
 	glBindVertexArray(m_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index);

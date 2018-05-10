@@ -8,7 +8,8 @@ using namespace CommonLibOgl;
 
 
 Cubemap::Cubemap(Camera& camera, GLfloat side, const std::string& textureDir)
-	: Renderable(camera), m_side(side), m_textureDir(textureDir), 
+	: Renderable(camera, glm::vec3()),    // cubemap does not need position
+	  m_side(side), m_textureDir(textureDir), 
 	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_texture{}
 {
 	// Initialize the program wrapper.
@@ -19,6 +20,8 @@ Cubemap::Cubemap(Camera& camera, GLfloat side, const std::string& textureDir)
 	};
 
 	m_spProgram = std::make_unique<ProgramGLSL>(shaders);
+
+	m_programId = m_spProgram->getProgram();
 
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);

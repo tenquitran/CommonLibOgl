@@ -11,19 +11,12 @@ namespace CommonLibOgl
 
 		virtual ~PlaneHorizontal();
 
-		// Update Model-View-Projection (MVP) and other matrices in the GLSL program.
-		virtual void updateMatrices() const override;
-
 		virtual void render() const override;
 
 	private:
 		void setMaterialProperties() const;
 
 	private:
-		const GLuint m_program;    // GLSL program ID
-
-		glm::vec3 m_center;
-
 		const GLfloat m_side;
 
 		const MaterialPhong m_material;
