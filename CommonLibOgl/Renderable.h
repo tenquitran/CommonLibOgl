@@ -17,6 +17,16 @@ namespace CommonLibOgl
 		//             position - position in the scene.
 		Renderable(Camera& camera, const glm::vec3& position);
 
+		virtual ~Renderable();
+
+		bool initializeMesh();
+
+		// Create the primitive.
+		virtual bool create() = 0;
+
+		// Get the primitive type.
+		virtual wchar_t* getType() const = 0;
+
 		virtual void render() const = 0;
 
 		//////////////////////////////////////////////////////////////////////////
@@ -43,6 +53,10 @@ namespace CommonLibOgl
 		Renderable(const Renderable&) = delete;
 		Renderable& operator=(const Renderable&) = delete;
 
+		virtual std::vector<GLfloat> getVertices() const = 0;
+		virtual std::vector<GLuint> getIndices() const = 0;
+		virtual std::vector<GLfloat> getNormals() const = 0;
+
 	protected:
 		// GLSL program ID.
 		GLuint m_programId;
@@ -57,5 +71,13 @@ namespace CommonLibOgl
 		glm::vec3 m_rotationDegrees;
 
 		GLfloat m_scaleFactor;
+
+		GLuint m_vao;
+		GLuint m_vbo;
+
+		GLuint m_index;          // index buffer
+		GLsizei m_indexCount;    // number of indices
+
+		GLuint m_normal;         // normal buffer
 	};
 }

@@ -8,7 +8,6 @@ namespace CommonLibOgl
 	// https://github.com/daw42/glslcookbook/blob/master/ingredients/vbocube.cpp
 	class Cube
 		: public Renderable
-		//, public Movable
 	{
 	public:
 		// Parameters: program - GLSL program ID;
@@ -20,11 +19,24 @@ namespace CommonLibOgl
 
 		virtual ~Cube();
 
+		// Create the primitive.
+		virtual bool create() override;
+
+		// Get the primitive type.
+		virtual wchar_t* getType() const override
+		{
+			return L"Cube";
+		}
+
 		virtual void render() const override;
 
 	private:
 		Cube(const Cube&) = delete;
 		Cube& operator=(const Cube&) = delete;
+
+		virtual std::vector<GLfloat> getVertices() const override;
+		virtual std::vector<GLuint> getIndices() const override;
+		virtual std::vector<GLfloat> getNormals() const override;
 
 		void setMaterialProperties() const;
 
@@ -33,6 +45,7 @@ namespace CommonLibOgl
 
 		const MaterialPhong m_material;
 
+#if 0
 		GLuint m_vao;
 		GLuint m_vbo;
 
@@ -40,5 +53,6 @@ namespace CommonLibOgl
 		GLsizei m_indexCount;    // number of indices
 
 		GLuint m_normal;         // normal buffer
+#endif
 	};
 }

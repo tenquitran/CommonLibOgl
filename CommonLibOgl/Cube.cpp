@@ -9,8 +9,9 @@ using namespace CommonLibOgl;
 
 Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat side, const MaterialPhong& material)
 	: Renderable(program, camera, position),
-	  m_side(side), m_material(material), m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}
+	  m_side(side), m_material(material)/*, m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_normal{}*/
 {
+#if 0
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
 
@@ -126,6 +127,7 @@ Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat si
 
 	// Initialize matrices according to the camera state.
 	updateMatrices();
+#endif
 }
 
 Cube::~Cube()
@@ -153,6 +155,102 @@ Cube::~Cube()
 		glBindVertexArray(0);
 		glDeleteVertexArrays(1, &m_vao);
 	}
+}
+
+bool Cube::create()
+{
+	if (!initializeMesh())
+	{
+		std::wcerr << getType() << ": mesh initialization failed\n";
+		return false;
+	}
+
+	setMaterialProperties();
+
+	return true;
+}
+
+std::vector<GLfloat> Cube::getVertices() const
+{
+	const GLfloat HalfSide = m_side / 2.0f;
+
+	return std::vector<GLfloat> {
+		// Front
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		// Right
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		// Back
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		// Left
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		// Bottom
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y - HalfSide, m_posInitial.z + HalfSide,
+		// Top
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z + HalfSide,
+		m_posInitial.x + HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide,
+		m_posInitial.x - HalfSide, m_posInitial.y + HalfSide, m_posInitial.z - HalfSide };
+}
+
+std::vector<GLuint> Cube::getIndices() const
+{
+	return std::vector<GLuint> {
+		0, 1, 2, 0, 2, 3,
+		4, 5, 6, 4, 6, 7,
+		8, 9, 10, 8, 10, 11,
+		12, 13, 14, 12, 14, 15,
+		16, 17, 18, 16, 18, 19,
+		20, 21, 22, 20, 22, 23 };
+}
+
+std::vector<GLfloat> Cube::getNormals() const
+{
+	return std::vector<GLfloat> {
+		// Front
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		// Right
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		// Back
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		// Left
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		// Bottom
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		// Top
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f };
 }
 
 void Cube::setMaterialProperties() const

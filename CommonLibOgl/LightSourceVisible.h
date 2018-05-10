@@ -8,7 +8,6 @@ namespace CommonLibOgl
 	// https://github.com/daw42/glslcookbook/blob/master/ingredients/vbocube.cpp
 	class LightSourceVisible
 		: public Renderable
-		//, public Movable
 	{
 	public:
 		// Parameters: cubeSide - size of the light source cube side;
@@ -18,6 +17,15 @@ namespace CommonLibOgl
 		LightSourceVisible(Camera& camera, const glm::vec4& position, GLfloat side, const glm::vec3& color);
 
 		virtual ~LightSourceVisible();
+
+		// Create the primitive.
+		virtual bool create() override;
+
+		// Get the primitive type.
+		virtual wchar_t* getType() const override
+		{
+			return L"LightSourceVisible";
+		}
 
 		// Update Model-View-Projection (MVP) and other matrices in the GLSL program.
 		virtual void updateMatrices() const override;
