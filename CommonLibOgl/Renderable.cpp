@@ -226,10 +226,6 @@ void Renderable::updateMatrices() const
 
 	glm::mat4 mvp = proj * view * model;
 
-	assert(m_programId);
-
-	glUseProgram(m_programId);
-
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(mvp));
 
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(mv));
