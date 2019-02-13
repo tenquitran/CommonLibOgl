@@ -15,7 +15,17 @@ OglScene::~OglScene()
 {
 }
 
-bool OglScene::initialize(GLfloat aspectRatio, const OpenGLInfo& openGlInfo, const ShaderCollection& shaders, 
+GLuint OglScene::getGlslProgramId() const
+{
+    if (!m_spProgram)
+    {
+        ATLASSERT(FALSE); return 0;
+    }
+
+    return m_spProgram->getProgram();
+}
+
+bool OglScene::initializeBase(GLfloat aspectRatio, const OpenGLInfo& openGlInfo, const ShaderCollection& shaders, 
     const glm::vec3& cameraOffset /*= {}*/)
 {
     glEnable(GL_DEPTH_TEST);
@@ -136,9 +146,9 @@ void OglScene::resize(GLfloat aspectRatio)
     updateUniformsDerived(m_spCamera);
 }
 
-void OglScene::render() const
+void OglScene::renderBase() const
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    renderDerived();
+    render();
 }

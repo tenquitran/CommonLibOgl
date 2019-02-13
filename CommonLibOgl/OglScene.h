@@ -14,15 +14,19 @@ namespace CommonLibOgl
 #pragma region ToImplement
 
         // Initialize the derived scene.
-        virtual bool initializeDerived() = 0;
+        virtual bool initialize() = 0;
 
         // Update OpenGL uniforms such as ModelView matrix (can be empty).
-        virtual void updateUniformsDerived(const std::unique_ptr<Camera>& spCamera) const = 0;
+        virtual void updateUniforms(const std::unique_ptr<Camera>& spCamera) const = 0;
 
         // Render the derived scene.
-        virtual void renderDerived() const = 0;
+        virtual void render() const = 0;
 
 #pragma endregion ToImplement
+
+        // Get GLSL program ID.
+        // Returns: non-zero value on success.
+        GLuint getGlslProgramId() const;
 
         // Initialize the base scene.
         // Parameters: aspectRatio - aspect ratio of the window's client area;
@@ -35,12 +39,12 @@ namespace CommonLibOgl
         // };
         //
         //             cameraOffset - (optional) initial camera offset.
-        bool initialize(GLfloat aspectRatio, const CommonLibOgl::OpenGLInfo& openGlInfo, 
+        bool initializeBase(GLfloat aspectRatio, const CommonLibOgl::OpenGLInfo& openGlInfo, 
             const ShaderCollection& shaders, const glm::vec3& cameraOffset = {});
 
         void resize(GLfloat aspectRatio);
 
-        void render() const;
+        void renderBase() const;
 
         //////////////////////////////////////////////////////////////////////////
         // Camera control.

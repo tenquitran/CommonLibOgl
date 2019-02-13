@@ -42,6 +42,16 @@ WindowMain::~WindowMain()
     }
 }
 
+GLuint WindowMain::getGlslProgramId() const
+{
+    if (!m_spScene)
+    {
+        ATLASSERT(FALSE); return 0;
+    }
+
+    return m_spScene->getGlslProgramId();
+}
+
 ATOM WindowMain::registerClass()
 {
     WNDCLASSEX wcex = {};

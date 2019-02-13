@@ -16,6 +16,10 @@ namespace CommonLibOgl
 
         virtual ~WindowMain();
 
+        // Get GLSL program ID.
+        // Returns: non-zero value on success.
+        GLuint getGlslProgramId() const;
+
         // Run the window's message loop.
         // Parameters: nCmdShow - controls how the window is to be shown;
         //             shaders - shaders to use. Example:
@@ -84,6 +88,5 @@ namespace CommonLibOgl
 
         // OpenGL scene.
         std::shared_ptr<OglScene> m_spScene;
-        //OglScene m_scene;
     };
 }
