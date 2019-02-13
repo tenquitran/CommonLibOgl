@@ -157,6 +157,8 @@ bool Renderable::initializeMesh()
 
 	// Initialize matrices according to the camera state.
 	updateMatrices();
+
+    return true;
 }
 
 void Renderable::translate(const glm::vec3& diff)

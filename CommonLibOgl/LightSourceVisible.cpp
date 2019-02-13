@@ -6,6 +6,7 @@ using namespace CommonLibOgl;
 
 //////////////////////////////////////////////////////////////////////////
 
+#if 0
 
 LightSourceVisible::LightSourceVisible(Camera& camera, const glm::vec4& position, GLfloat side, const glm::vec3& color)
 	: Renderable(camera, position),
@@ -108,6 +109,7 @@ LightSourceVisible::LightSourceVisible(Camera& camera, const glm::vec4& position
 
 LightSourceVisible::~LightSourceVisible()
 {
+#if 0
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
@@ -126,6 +128,7 @@ LightSourceVisible::~LightSourceVisible()
 		glBindVertexArray(0);
 		glDeleteVertexArrays(1, &m_vao);
 	}
+#endif
 }
 
 bool LightSourceVisible::create()
@@ -270,3 +273,5 @@ void LightSourceVisible::render() const
 	glBindVertexArray(0);
 	glUseProgram(0);
 }
+
+#endif

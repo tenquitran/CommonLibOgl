@@ -8,8 +8,7 @@ using namespace CommonLibOgl;
 
 
 WindowBase::WindowBase(HINSTANCE hInstance, const WindowInfo& wndInfo, const OpenGLInfo& openGLInfo)
-	: m_hInstance(hInstance), m_wndInfo(wndInfo), m_openGlInfo(openGLInfo), 
-	  m_hWnd(nullptr), m_hRC(nullptr), m_hWndTemporary(nullptr)
+	: m_hInstance(hInstance), m_wndInfo(wndInfo), m_openGlInfo(openGLInfo)
 {
 	if (!m_hInstance)
 	{

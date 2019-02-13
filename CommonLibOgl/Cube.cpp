@@ -132,6 +132,7 @@ Cube::Cube(GLuint program, Camera& camera, const glm::vec3& position, GLfloat si
 
 Cube::~Cube()
 {
+#if 0
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
@@ -155,6 +156,7 @@ Cube::~Cube()
 		glBindVertexArray(0);
 		glDeleteVertexArrays(1, &m_vao);
 	}
+#endif
 }
 
 bool Cube::create()

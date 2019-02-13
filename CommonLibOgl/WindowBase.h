@@ -64,24 +64,24 @@ namespace CommonLibOgl
 		// Title bar text.
 		TCHAR m_szTitle[MAX_LOADSTRING];
 
-		// The window class name.
+		// Window class name.
 		TCHAR m_szWindowClass[MAX_LOADSTRING];
 
 		// Application instance.
-		HINSTANCE m_hInstance;
+        const HINSTANCE m_hInstance = { nullptr };
 
 		// Information about the window.
 		WindowInfo m_wndInfo;
 
 		// OpenGL settings.
-		OpenGLInfo m_openGlInfo;
+		const OpenGLInfo m_openGlInfo;
 
 		// Window handle.
-		HWND m_hWnd;
+        HWND m_hWnd = { nullptr };
 
 		// OpenGL rendering context for the main window.
-		HGLRC m_hRC;
+        HGLRC m_hRC = { nullptr };
 
-		HWND m_hWndTemporary;
+        HWND m_hWndTemporary = { nullptr };
 	};
 }

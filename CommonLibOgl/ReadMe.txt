@@ -6,3 +6,8 @@ Uses libraries:
 	- SOIL: http://www.lonesock.net/soil.html
 
 Created: February 23, 2018
+
+//////////////////////////////
+
+TODO:
+- refactoring (class members initialization, replace assert() with ATLASSERT)

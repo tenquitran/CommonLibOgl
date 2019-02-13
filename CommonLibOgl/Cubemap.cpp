@@ -15,8 +15,8 @@ Cubemap::Cubemap(Camera& camera, GLfloat side, const std::string& textureDir)
 	// Initialize the program wrapper.
 
 	const ShaderCollection shaders = {
-		{ GL_VERTEX_SHADER,   "..\\..\\CommonLibOgl\\CommonLibOgl\\shaders\\cubemap.vert" },
-		{ GL_FRAGMENT_SHADER, "..\\..\\CommonLibOgl\\CommonLibOgl\\shaders\\cubemap.frag" }
+        { GL_VERTEX_SHADER,   "..\\..\\CommonLibOgl\\CommonLibOgl\\shaders\\cubemap.vert" },
+        { GL_FRAGMENT_SHADER, "..\\..\\CommonLibOgl\\CommonLibOgl\\shaders\\cubemap.frag" }
 	};
 
 	m_spProgram = std::make_unique<ProgramGLSL>(shaders);

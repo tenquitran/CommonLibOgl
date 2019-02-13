@@ -1,6 +1,7 @@
 #pragma once
 
 
+#if 0
 namespace CommonLibOgl
 {
 	// Visible light source (a cube).
@@ -39,12 +40,16 @@ namespace CommonLibOgl
 		// For simplicity, the light source has only the emissive color.
 		const glm::vec3 m_colorEmissive;
 
+#if 0
 		GLuint m_vao;
 		GLuint m_vbo;
 
 		GLuint m_index;          // index buffer
 		GLsizei m_indexCount;    // number of indices
+#endif
 
 		std::unique_ptr<CommonLibOgl::ProgramGLSL> m_spProgram;
 	};
 }
+
+#endif

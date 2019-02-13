@@ -43,9 +43,12 @@
 #include "WindowInfo.h"
 #include "OpenGLInfo.h"
 #include "Camera.h"
+
 #include "WindowBase.h"
 #include "ProgramGLSL.h"
 
+#include "OglScene.h"
+#include "WindowMain.h"
 
 // Materials.
 #include "MaterialPhong.h"

@@ -76,7 +76,7 @@ GLuint ProgramGLSL::buildShaders(const ShaderCollection& shaders)
 
 		// Create shader.
 
-		GLuint shader = glCreateShader(itrShader.first);
+        GLuint shader = glCreateShader(itrShader.first);
 		if (0 == shader)
 		{
 			std::wcerr << L"glCreateShader() failed\n";
