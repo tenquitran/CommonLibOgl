@@ -47,6 +47,7 @@
 #include "WindowBase.h"
 #include "ProgramGLSL.h"
 
+#include "IScene.h"
 #include "OglScene.h"
 #include "WindowMain.h"
 

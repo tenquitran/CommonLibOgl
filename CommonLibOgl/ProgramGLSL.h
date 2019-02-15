@@ -20,8 +20,8 @@ namespace CommonLibOgl
 
 		GLuint getProgram() const;
 
-		// Program validation is better done after all texture sampler uniforms are set 
-		// (typically, at the end of the scene initialization).
+        // It's better to validate the program after setting all texture sampler uniforms 
+		// (usually, at the end of the OpenGL scene initialization).
 		// Otherwise, on using cubemap with some other texture, program validation will fail with this error:
 		//
 		// Validation failed! - Different sampler types for same sample texture unit in fragment shader.
@@ -31,7 +31,7 @@ namespace CommonLibOgl
 		ProgramGLSL(const ProgramGLSL&);
 		ProgramGLSL& operator=(const ProgramGLSL&);
 
-		// Build the shaders.
+		// Build shaders.
 		// Parameters: shaders - list of shaders to build (key: shader type; value: shader file name or relative path).
 		// Returns: program handle (a positive integer) on success, zero otherwise.
 		// Throws: std::bad_alloc
@@ -40,11 +40,12 @@ namespace CommonLibOgl
 		// Compile the shader.
 		// Parameters: shader - OpenGL shader object;
 		//             fileName - shader file name (for logging).
+        // Returns: true on success, false otherwise.
 		bool compileShader(GLuint shader, const std::string& fileName);
 
 	private:
 		// GLSL program.
-		GLuint m_program;
+        GLuint m_program = {};
 
 		// Data on shader files to load and build.
 		const ShaderCollection m_shaderFiles;

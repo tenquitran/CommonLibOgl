@@ -7,8 +7,8 @@ using namespace CommonLibOgl;
 //////////////////////////////////////////////////////////////////////////
 
 
-WindowMain::WindowMain(HINSTANCE hInstance, const WindowInfo& wndInfo, const OpenGLInfo& openGLInfo, std::weak_ptr<OglScene>& scene)
-    : m_hInstance(hInstance), m_wndInfo(wndInfo), m_openGlInfo(openGLInfo), m_spScene(scene)
+WindowMain::WindowMain(HINSTANCE hInstance, int nCmdShow, const WindowInfo& wndInfo, const OpenGLInfo& openGLInfo)
+    : m_hInstance(hInstance), m_wndInfo(wndInfo), m_openGlInfo(openGLInfo)
 {
     if (!m_hInstance)
     {
@@ -19,18 +19,27 @@ WindowMain::WindowMain(HINSTANCE hInstance, const WindowInfo& wndInfo, const Ope
     {
         ATLASSERT(FALSE); throw EXCEPTION_FMT(L"Invalid window size: (%d, %d)", m_wndInfo.m_clientWidth, m_wndInfo.m_clientHeight);
     }
-    else if (!m_spScene)
-    {
-        ATLASSERT(FALSE); throw EXCEPTION(L"OpenGL scene is NULL");
-    }
 
     // Initialize global strings.
-    LoadString(hInstance, m_wndInfo.m_titleId, m_szTitle, MAX_LOADSTRING);
-    LoadString(hInstance, m_wndInfo.m_wndClassId, m_szWindowClass, MAX_LOADSTRING);
+    LoadString(hInstance, m_wndInfo.m_titleId, m_szTitle, MaxLoadString);
+    LoadString(hInstance, m_wndInfo.m_wndClassId, m_szWindowClass, MaxLoadString);
 
     if (!registerClass())
     {
         ATLASSERT(FALSE); throw EXCEPTION(L"Failed to register windows class");
+    }
+
+    // Perform application initialization.
+    if (!initInstance(nCmdShow))
+    {
+        ATLASSERT(FALSE); throw EXCEPTION(L"Failed to initialize application instance");
+    }
+
+    // Set up OpenGL context for our window.
+    if (!setupOpenGlContext())
+    {
+        ATLASSERT(FALSE); throw EXCEPTION_FMT(L"Failed to set up OpenGL context (version %d.%d)", 
+            m_openGlInfo.OpenGlMajor, m_openGlInfo.OpenGlMinor);
     }
 }
 
@@ -40,16 +49,6 @@ WindowMain::~WindowMain()
     {
         DestroyWindow(m_hWndTemporary);
     }
-}
-
-GLuint WindowMain::getGlslProgramId() const
-{
-    if (!m_spScene)
-    {
-        ATLASSERT(FALSE); return 0;
-    }
-
-    return m_spScene->getGlslProgramId();
 }
 
 ATOM WindowMain::registerClass()
@@ -360,38 +359,33 @@ void APIENTRY WindowMain::openGlDebugCallback(GLenum source, GLenum type, GLuint
     std::wcout << std::endl;
 }
 
-int WindowMain::runMessageLoop(int nCmdShow, const ShaderCollection& shaders, const glm::vec3& cameraOffset /*= {}*/)
+int WindowMain::runMessageLoop(std::shared_ptr<IScene>& spScene)
 {
-    // Perform application initialization.
-    if (!initInstance(nCmdShow))
+    m_spScene = spScene;
+    if (!m_spScene)
     {
-        std::wcerr << L"Failed to initialize application instance\n";
+        std::wcerr << L"OpenGL scene is NULL\n";
         ATLASSERT(FALSE); return 1;
     }
 
-    // Set up OpenGL context for our window.
-    if (!setupOpenGlContext())
-    {
-        std::wcerr << L"Failed to set up OpenGL context (version " << m_openGlInfo.OpenGlMajor << L"." << m_openGlInfo.OpenGlMinor << L")\n";
-        ATLASSERT(FALSE); return 1;
-    }
-
-    MSG msg = {};
-
-    // Complete the window initialization.
+    // Complete the window initialization and tell the OpenGL scene to resize itself.
 
     if (0 == m_wndInfo.m_clientHeight)    // prevent dividing by zero
     {
         m_wndInfo.m_clientHeight = 1;
     }
 
-    GLfloat aspectRatio = m_wndInfo.m_clientWidth / (GLfloat)m_wndInfo.m_clientHeight;
-
-    if (!m_spScene->initialize(aspectRatio, m_openGlInfo, shaders, cameraOffset))
+    if (!m_spScene->initialize())
     {
         std::wcerr << L"Failed to initialize OpenGL scene\n";
         ATLASSERT(FALSE); return 1;
     }
+
+    resize(m_wndInfo.m_clientWidth, m_wndInfo.m_clientHeight);
+
+    // Start the message loop.
+
+    MSG msg = {};
 
     while (WM_QUIT != msg.message)
     {

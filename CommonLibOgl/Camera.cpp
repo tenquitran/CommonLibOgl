@@ -7,15 +7,10 @@ using namespace CommonLibOgl;
 //////////////////////////////////////////////////////////////////////////
 
 
-Camera::Camera(glm::vec3 position, GLfloat aspectRatio, GLfloat scaleFactor /*= 1.0f*/,
+Camera::Camera(glm::vec3 position, GLfloat scaleFactor /*= 1.0f*/,
 	GLfloat fieldOfView /*= 45.0f*/, GLfloat frustumNear /*= 0.1f*/, GLfloat frustumFar /*= 1000.0f*/)
-	: InitialPosition(position), Up(0.0f, 1.0f, 0.0f), m_aspectRatio(aspectRatio), 
-	  ScaleFactorMin(0.01f), m_scaleFactor(scaleFactor), 
+	: InitialPosition(position), m_scaleFactor(scaleFactor), 
 	  FieldOfView(fieldOfView), FrustumNear(frustumNear), FrustumFar(frustumFar)
-{
-}
-
-Camera::~Camera()
 {
 }
 

@@ -8,15 +8,12 @@ namespace CommonLibOgl
 	{
 	public:
 		// Parameters: position    - camera position in the scene;
-		//             aspectRatio - aspect ratio of the main application window;
 		//             scaleFactor - scale factor for the camera;
 		//             fieldOfView - field of view angle;
 		//             frustumNear - near frustum boundary;
 		//             frustumFar  - far frustum boundary.
-		Camera(glm::vec3 position, GLfloat aspectRatio, GLfloat scaleFactor = 1.0f,
+		Camera(glm::vec3 position, GLfloat scaleFactor = 1.0f,
 			GLfloat fieldOfView = 45.0f, GLfloat frustumNear = 0.1f, GLfloat frustumFar = 1000.0f);
-
-		virtual ~Camera();
 
 		glm::mat4 getProjectionMatrix() const;
 
@@ -58,24 +55,24 @@ namespace CommonLibOgl
 		const glm::vec3 InitialPosition;
 
 		// Up and front directions.
-		const glm::vec3 Up;
+        const glm::vec3 Up = { 0.0f, 1.0f, 0.0f };
 		const glm::vec3 Front;
 
 		// Aspect ratio of the window.
-		GLfloat m_aspectRatio;
+        GLfloat m_aspectRatio = { 1.0f };
 
 		// Minimum scale factor.
-		const GLfloat ScaleFactorMin;
+        const GLfloat ScaleFactorMin = { 0.01f };
 
 		// Current scale factor.
-		GLfloat m_scaleFactor;
+        GLfloat m_scaleFactor = { 1.0f };
 
 		// Field of view angle.
-		const GLfloat FieldOfView;
+        const GLfloat FieldOfView = { 45.0f };
 
 		// Frustum boundaries.
-		const GLfloat FrustumNear;
-		const GLfloat FrustumFar;
+        const GLfloat FrustumNear = { 0.1f };
+        const GLfloat FrustumFar = { 1000.0f };
 
 		// Translation vector of the camera.
 		glm::vec3 m_translation;
@@ -83,4 +80,7 @@ namespace CommonLibOgl
 		// Rotation vector (in degrees).
 		glm::vec3 m_rotationDegrees;
 	};
+
+    // OpenGL camera: shared_ptr.
+    typedef std::shared_ptr<Camera> CameraPtr;
 }

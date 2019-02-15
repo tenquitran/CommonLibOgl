@@ -82,6 +82,7 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Cubemap.h" />
     <ClInclude Include="Exception.h" />
+    <ClInclude Include="IScene.h" />
     <ClInclude Include="LightSourceVisible.h" />
     <ClInclude Include="MaterialPhong.h" />
     <ClInclude Include="OpenGLInfo.h" />

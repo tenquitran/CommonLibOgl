@@ -9,28 +9,17 @@ namespace CommonLibOgl
     {
     public:
         // Parameters: hInstance - application instance;
+        //             nCmdShow - controls how the window is to be shown;
         //             wndInfo - window settings;
         //             openGLInfo - OpenGL settings.
         // Throws: Exception, std::bad_alloc
-        WindowMain(HINSTANCE hInstance, const WindowInfo& wndInfo, const OpenGLInfo& openGLInfo, std::weak_ptr<OglScene>& scene);
+        WindowMain(HINSTANCE hInstance, int nCmdShow, const WindowInfo& wndInfo, const OpenGLInfo& openGLInfo);
 
         virtual ~WindowMain();
 
-        // Get GLSL program ID.
-        // Returns: non-zero value on success.
-        GLuint getGlslProgramId() const;
-
         // Run the window's message loop.
-        // Parameters: nCmdShow - controls how the window is to be shown;
-        //             shaders - shaders to use. Example:
-        //
-        // const ShaderCollection shaders = {
-        //    { GL_VERTEX_SHADER,   "shaders\\terrain.vert" },
-        //    { GL_FRAGMENT_SHADER, "shaders\\terrain.frag" }
-        // };
-        //
-        //             cameraOffset - (optional) initial camera offset.
-        int runMessageLoop(int nCmdShow, const ShaderCollection& shaders, const glm::vec3& cameraOffset = {});
+        // Parameters: spScene - OpenGL scene.
+        int runMessageLoop(std::shared_ptr<IScene>& spScene);
 
     protected:
         // The About box dialog procedure.
@@ -61,13 +50,13 @@ namespace CommonLibOgl
         void render() const;
 
     private:
-        static const size_t MAX_LOADSTRING = 100;
+        static const size_t MaxLoadString = 100;
 
         // Title bar text.
-        TCHAR m_szTitle[MAX_LOADSTRING];
+        TCHAR m_szTitle[MaxLoadString];
 
         // Window class name.
-        TCHAR m_szWindowClass[MAX_LOADSTRING];
+        TCHAR m_szWindowClass[MaxLoadString];
 
         // Application instance.
         const HINSTANCE m_hInstance = { nullptr };
@@ -87,6 +76,7 @@ namespace CommonLibOgl
         HWND m_hWndTemporary = { nullptr };
 
         // OpenGL scene.
-        std::shared_ptr<OglScene> m_spScene;
+        std::shared_ptr<IScene> m_spScene;
+        //std::shared_ptr<OglScene> m_spScene;
     };
 }

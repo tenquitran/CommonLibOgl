@@ -81,6 +81,9 @@
     <ClInclude Include="OglScene.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="IScene.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

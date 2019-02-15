@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#if 0
 //////////////////////////////////////////////////////////////////////////
 
 using namespace CommonLibOgl;
@@ -152,3 +153,4 @@ void OglScene::renderBase() const
 
     render();
 }
+#endif

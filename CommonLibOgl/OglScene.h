@@ -1,6 +1,7 @@
 #pragma once
 
 
+#if 0
 namespace CommonLibOgl
 {
     // Base class for OpenGL scene.
@@ -71,3 +72,4 @@ namespace CommonLibOgl
         std::unique_ptr<CommonLibOgl::Camera> m_spCamera;
     };
 }
+#endif
