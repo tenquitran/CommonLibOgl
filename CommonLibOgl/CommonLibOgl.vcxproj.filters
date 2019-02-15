@@ -78,9 +78,6 @@
     <ClInclude Include="WindowMain.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="OglScene.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
     <ClInclude Include="IScene.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -117,9 +114,6 @@
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="WindowMain.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="OglScene.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
   </ItemGroup>

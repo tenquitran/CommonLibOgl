@@ -15,6 +15,12 @@ namespace CommonLibOgl
 		Camera(glm::vec3 position, GLfloat scaleFactor = 1.0f,
 			GLfloat fieldOfView = 45.0f, GLfloat frustumNear = 0.1f, GLfloat frustumFar = 1000.0f);
 
+        void translate(const glm::vec3& diff);
+
+        void rotate(const glm::vec3& degrees);
+
+        void scale(GLfloat amount);
+
 		glm::mat4 getProjectionMatrix() const;
 
 		glm::mat4 getModelMatrix() const;
@@ -32,19 +38,8 @@ namespace CommonLibOgl
 		// Get camera position in the scene.
 		glm::vec3 getPosition() const;
 
-		void translateX(GLfloat diff);
-		void translateY(GLfloat diff);
-		void translateZ(GLfloat diff);
-
-		void rotateX(GLfloat degrees);
-		void rotateY(GLfloat degrees);
-		void rotateZ(GLfloat degrees);
-
-		void rotateXY(GLfloat xDegrees, GLfloat yDegrees);
-
-		GLfloat getScale() const;
-
-		void scale(GLfloat amount);
+        // Get current scale factor.
+        GLfloat getScale() const;
 
 	private:
 		Camera(const Camera&);

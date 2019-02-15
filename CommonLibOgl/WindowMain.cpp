@@ -462,10 +462,7 @@ LRESULT CALLBACK WindowMain::windowProc(HWND hWnd, UINT message, WPARAM wParam, 
         }
         break;
     case WM_KEYDOWN:
-        // TODO: fix and uncomment
-#if 0
-        pMainWnd->windowProcDerived(hWnd, message, wParam, lParam);
-#endif
+        pMainWnd->reactOnKeys(hWnd, wParam, lParam);
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -475,6 +472,61 @@ LRESULT CALLBACK WindowMain::windowProc(HWND hWnd, UINT message, WPARAM wParam, 
     }
 
     return 0;
+}
+
+void WindowMain::reactOnKeys(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    int key = (int)wParam;
+    //LPARAM keyData = lParam;
+
+    switch (key)
+    {
+    case VK_ESCAPE:
+        DestroyWindow(hWnd);
+        break;
+
+    //////////////////////////////////////////////////////////////////////////
+    // Translate the camera.
+    //////////////////////////////////////////////////////////////////////////
+    case 0x57:    // W key
+        m_spScene->translateCamera({0.0f, 0.1f, 0.0f});
+        break;
+    case 0x53:    // S key
+        m_spScene->translateCamera({0.0f, -0.1f, 0.0f});
+        break;
+    case 0x41:    // A key
+        m_spScene->translateCamera({-0.1f, 0.0f, 0.0f});
+        break;
+    case 0x44:    // D key
+        m_spScene->translateCamera({0.1f, 0.0f, 0.0f});
+        break;
+
+    //////////////////////////////////////////////////////////////////////////
+    // Rotate the camera.
+    //////////////////////////////////////////////////////////////////////////
+    case VK_UP:
+        m_spScene->rotateCamera({2.0f, 0.0f, 0.0f});
+        break;
+    case VK_DOWN:
+        m_spScene->rotateCamera({-2.0f, 0.0f, 0.0f});
+        break;
+    case VK_LEFT:
+        m_spScene->rotateCamera({0.0f, -2.0f, 0.0f});
+        break;
+    case VK_RIGHT:
+        m_spScene->rotateCamera({0.0f, 2.0f, 0.0f});
+        break;
+
+    //////////////////////////////////////////////////////////////////////////
+    // Zoom in/out for the camera.
+    //////////////////////////////////////////////////////////////////////////
+    case VK_NUMPAD0:
+        m_spScene->scaleCamera(-0.05f);
+        break;
+    case VK_NUMPAD1:
+        m_spScene->scaleCamera(0.05f);
+        break;
+    }
 }
 
 void WindowMain::render() const

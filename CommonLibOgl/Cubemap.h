@@ -27,16 +27,9 @@ namespace CommonLibOgl
 		// Camera control.
 		//////////////////////////////////////////////////////////////////////////
 
-		void translateCameraX(GLfloat diff);
-		void translateCameraY(GLfloat diff);
-		void translateCameraZ(GLfloat diff);
+		void translateCamera(const glm::vec3& diff);
 
-		void rotateCameraX(GLfloat angleDegrees);
-		void rotateCameraY(GLfloat angleDegrees);
-
-#if 0
-		void rotateCameraZ(GLfloat angleDegrees);
-#endif
+        void rotateCamera(const glm::vec3& degrees);
 
 		GLfloat getCameraScale() const;
 
@@ -49,18 +42,18 @@ namespace CommonLibOgl
 		bool loadCubemapTextures();
 
 	private:
-		const GLfloat m_side;
+        const GLfloat m_side = { 1.0f };
 
 		const std::string& m_textureDir;    // full or partial path to directory with cubemap textures
 
 		std::unique_ptr<ProgramGLSL> m_spProgram;
 
-		GLuint m_vao;
-		GLuint m_vbo;
+        GLuint m_vao = {};
+        GLuint m_vbo = {};
 
-		GLuint m_index;          // index buffer
-		GLsizei m_indexCount;    // number of indices
+        GLuint m_index = {};          // index buffer
+        GLsizei m_indexCount = {};    // number of indices
 
-		GLuint m_texture;
+        GLuint m_texture = {};
 	};
 }

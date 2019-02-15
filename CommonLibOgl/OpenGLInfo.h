@@ -14,14 +14,14 @@ namespace CommonLibOgl
 
 	public:
 		// OpenGL version number.
-		const int OpenGlMajor;
-		const int OpenGlMinor;
+        const int OpenGlMajor = { 1 };
+        const int OpenGlMinor = { 1 };
 
 		// Field of view angle.
-		const GLfloat FieldOfView = 45.0f;
+        const GLfloat FieldOfView = { 45.0f };
 
 		// Frustum boundaries.
-		const GLfloat FrustumNear = 0.1f;
-		const GLfloat FrustumFar = 1000.0f;
+        const GLfloat FrustumNear = { 0.1f };
+        const GLfloat FrustumFar = { 1000.0f };
 	};
 }

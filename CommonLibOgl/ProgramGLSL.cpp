@@ -11,6 +11,7 @@ ProgramGLSL::ProgramGLSL(const ShaderCollection& shaders)
 	: m_shaderFiles(shaders)
 {
 	m_program = buildShaders(m_shaderFiles);
+
 	if (0 == m_program)
 	{
 		throw EXCEPTION(L"Failed to build the program");
@@ -38,11 +39,9 @@ GLuint ProgramGLSL::buildShaders(const ShaderCollection& shaders)
 		return 0;
 	}
 
-	GLuint programId = {};
+    // Create GLSL program.
 
-	// Create GLSL program and shader objects.
-
-	programId = glCreateProgram();
+	GLuint programId = glCreateProgram();
 	if (0 == programId)
 	{
 		std::wcerr << L"glCreateProgram() failed\n";

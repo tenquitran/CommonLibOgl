@@ -9,8 +9,7 @@ using namespace CommonLibOgl;
 
 Cubemap::Cubemap(Camera& camera, GLfloat side, const std::string& textureDir)
 	: Renderable(camera, glm::vec3()),    // cubemap does not need position
-	  m_side(side), m_textureDir(textureDir), 
-	  m_vao{}, m_vbo{}, m_index{}, m_indexCount{}, m_texture{}
+	  m_side(side), m_textureDir(textureDir)
 {
 	// Initialize the program wrapper.
 
@@ -200,49 +199,19 @@ void Cubemap::updateMatrices() const
 	glUseProgram(0);
 }
 
-void Cubemap::translateCameraX(GLfloat diff)
+void Cubemap::translateCamera(const glm::vec3& diff)
 {
-	m_camera.translateX(diff);
+	m_camera.translate(diff);
 
 	updateMatrices();
 }
 
-void Cubemap::translateCameraY(GLfloat diff)
+void Cubemap::rotateCamera(const glm::vec3& degrees)
 {
-	m_camera.translateY(diff);
+    m_camera.rotate(degrees);
 
 	updateMatrices();
 }
-
-void Cubemap::translateCameraZ(GLfloat diff)
-{
-	m_camera.translateZ(diff);
-
-	updateMatrices();
-}
-
-void Cubemap::rotateCameraX(GLfloat angleDegrees)
-{
-	m_camera.rotateX(angleDegrees);
-
-	updateMatrices();
-}
-
-void Cubemap::rotateCameraY(GLfloat angleDegrees)
-{
-	m_camera.rotateY(angleDegrees);
-
-	updateMatrices();
-}
-
-#if 0
-void Cubemap::rotateCameraZ(GLfloat angleDegrees)
-{
-	m_camera.rotateZ(angleDegrees);
-
-	updateViewMatrices();
-}
-#endif
 
 GLfloat Cubemap::getCameraScale() const
 {

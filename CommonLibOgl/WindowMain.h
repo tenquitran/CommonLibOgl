@@ -21,10 +21,6 @@ namespace CommonLibOgl
         // Parameters: spScene - OpenGL scene.
         int runMessageLoop(std::shared_ptr<IScene>& spScene);
 
-    protected:
-        // The About box dialog procedure.
-        static INT_PTR CALLBACK aboutProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
-
     private:
         WindowMain(const WindowMain&) = delete;
         WindowMain& operator=(const WindowMain&) = delete;
@@ -41,8 +37,14 @@ namespace CommonLibOgl
         static void APIENTRY openGlDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
             GLsizei length, const GLchar* message, const void* param);
 
+        // The About box dialog procedure.
+        static INT_PTR CALLBACK aboutProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+
         // The window procedure.
         static LRESULT CALLBACK windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+        // React on key presses.
+        void reactOnKeys(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
         void resize(int clientWidth, int clientHeight);
 
@@ -50,7 +52,7 @@ namespace CommonLibOgl
         void render() const;
 
     private:
-        static const size_t MaxLoadString = 100;
+        static const size_t MaxLoadString = { 100 };
 
         // Title bar text.
         TCHAR m_szTitle[MaxLoadString];
@@ -77,6 +79,5 @@ namespace CommonLibOgl
 
         // OpenGL scene.
         std::shared_ptr<IScene> m_spScene;
-        //std::shared_ptr<OglScene> m_spScene;
     };
 }

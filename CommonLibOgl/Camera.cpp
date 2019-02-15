@@ -62,40 +62,14 @@ glm::vec3 Camera::getPosition() const
 	return (InitialPosition + m_translation);
 }
 
-void Camera::translateX(GLfloat diff)
+void Camera::translate(const glm::vec3& diff)
 {
-	m_translation.x += diff;
+	m_translation += diff;
 }
 
-void Camera::translateY(GLfloat diff)
+void Camera::rotate(const glm::vec3& degrees)
 {
-	m_translation.y += diff;
-}
-
-void Camera::translateZ(GLfloat diff)
-{
-	m_translation.z += diff;
-}
-
-void Camera::rotateX(GLfloat degrees)
-{
-	m_rotationDegrees.x += degrees;
-}
-
-void Camera::rotateY(GLfloat degrees)
-{
-	m_rotationDegrees.y += degrees;
-}
-
-void Camera::rotateZ(GLfloat degrees)
-{
-	m_rotationDegrees.z += degrees;
-}
-
-void Camera::rotateXY(GLfloat xDegrees, GLfloat yDegrees)
-{
-	m_rotationDegrees.x += xDegrees;
-	m_rotationDegrees.y += yDegrees;
+	m_rotationDegrees += degrees;
 }
 
 GLfloat Camera::getScale() const
