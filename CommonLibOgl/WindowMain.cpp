@@ -411,12 +411,15 @@ void WindowMain::resize(int clientWidth, int clientHeight)
     // Resize the viewport.
     glViewport(0, 0, clientWidth, clientHeight);
 
-    GLfloat aspectRatio = clientWidth / (GLfloat)clientHeight;
+	if (m_spScene)
+	{
+		GLfloat aspectRatio = clientWidth / (GLfloat)clientHeight;
 
-    // Calculate aspect ratio of the window.
-    gluPerspective(m_openGlInfo.FieldOfView, aspectRatio, m_openGlInfo.FrustumNear, m_openGlInfo.FrustumFar);
+		// Calculate aspect ratio of the window.
+		gluPerspective(m_openGlInfo.FieldOfView, aspectRatio, m_openGlInfo.FrustumNear, m_openGlInfo.FrustumFar);
 
-    m_spScene->resize(aspectRatio);
+		m_spScene->resize(aspectRatio);
+	}
 }
 
 INT_PTR CALLBACK WindowMain::aboutProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -476,6 +479,8 @@ LRESULT CALLBACK WindowMain::windowProc(HWND hWnd, UINT message, WPARAM wParam, 
 
 void WindowMain::reactOnKeys(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
     int key = (int)wParam;
     //LPARAM keyData = lParam;
 
