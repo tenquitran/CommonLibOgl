@@ -3,13 +3,13 @@
 
 namespace CommonLibOgl
 {
-	class Cube
+	class Triangle
 		: public Mesh
 	{
 	public:
-		Cube(const glm::vec3& origin, GLfloat side);
+		Triangle(const glm::vec3& origin, GLfloat side);
 
-		virtual ~Cube();
+		virtual ~Triangle();
 
 		virtual void render() const override;
 

@@ -25,6 +25,9 @@
     <Filter Include="Framework">
       <UniqueIdentifier>{1ab558b8-2ad5-455a-83ef-faa27a7c3d0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Primitives2">
+      <UniqueIdentifier>{59c12d1c-0118-4c58-abc3-dc8649073282}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -60,9 +63,6 @@
     <ClInclude Include="MaterialPhong.h">
       <Filter>Materials</Filter>
     </ClInclude>
-    <ClInclude Include="Cube.h">
-      <Filter>Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="Renderable.h">
       <Filter>Primitives</Filter>
     </ClInclude>
@@ -81,6 +81,18 @@
     <ClInclude Include="IScene.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Primitives2</Filter>
+    </ClInclude>
+    <ClInclude Include="CubePhong.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>Primitives2</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Primitives2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -98,9 +110,6 @@
     <ClCompile Include="LightSourceVisible.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="Cube.cpp">
-      <Filter>Primitives</Filter>
-    </ClCompile>
     <ClCompile Include="Cubemap.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
@@ -115,6 +124,18 @@
     </ClCompile>
     <ClCompile Include="WindowMain.cpp">
       <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Primitives2</Filter>
+    </ClCompile>
+    <ClCompile Include="CubePhong.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>Primitives2</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Primitives2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -57,9 +57,14 @@
 // Commonly used graphics primitives, light sources, etc.
 #include "Renderable.h"
 #include "LightSourceVisible.h"
-#include "Cube.h"
+#include "CubePhong.h"
 #include "Cubemap.h"
 #include "PlaneHorizontal.h"
+
+// Commonly used graphics primitives: version 2.
+#include "Mesh.h"
+#include "Triangle.h"
+#include "Cube.h"
 
 
 namespace CommonLibOgl
