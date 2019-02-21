@@ -65,6 +65,7 @@
 #include "Mesh.h"
 #include "Triangle.h"
 #include "Cube.h"
+#include "Plane.h"
 
 
 namespace CommonLibOgl

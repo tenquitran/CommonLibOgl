@@ -93,6 +93,9 @@
     <ClInclude Include="Cube.h">
       <Filter>Primitives2</Filter>
     </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Primitives2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -135,6 +138,9 @@
       <Filter>Primitives2</Filter>
     </ClCompile>
     <ClCompile Include="Cube.cpp">
+      <Filter>Primitives2</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
       <Filter>Primitives2</Filter>
     </ClCompile>
   </ItemGroup>

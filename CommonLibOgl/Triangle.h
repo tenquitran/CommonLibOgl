@@ -14,6 +14,6 @@ namespace CommonLibOgl
 		virtual void render() const override;
 
 	private:
-		const GLfloat m_side;
+		const GLfloat m_side = { 1.0f };
 	};
 }
