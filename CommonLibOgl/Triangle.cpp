@@ -11,6 +11,11 @@ Triangle::Triangle(const glm::vec3& origin, GLfloat side)
 	: Mesh(origin), 
 	  m_side(side)
 {
+	if (m_side < 0.0f)
+	{
+		ATLASSERT(FALSE); throw EXCEPTION(L"Negative side length");
+	}
+
 	// Set up the vertex buffer.
 
 	const GLfloat Height = glm::sqrt(glm::pow(m_side, 2) - glm::pow(m_side / 2, 2));
