@@ -13,30 +13,20 @@ Cube::Cube(const glm::vec3& origin, GLfloat side)
 {
 	// Set up the vertex buffer.
 
-	//const GLfloat Height = glm::sqrt(glm::pow(m_side, 2) - glm::pow(m_side / 2, 2));
-
 	const GLfloat HalfSide = m_side / 2;
 
+	// A cube has 8 vertices.
 	GLfloat vertices[] = {
-
-#if 1
 		// front
 		m_origin.x - HalfSide, m_origin.y - HalfSide, m_origin.z + HalfSide,
 		m_origin.x + HalfSide, m_origin.y - HalfSide, m_origin.z + HalfSide,
 		m_origin.x - HalfSide, m_origin.y + HalfSide, m_origin.z + HalfSide,
 		m_origin.x + HalfSide, m_origin.y + HalfSide, m_origin.z + HalfSide,
-
-#else
-		m_origin.x + HalfSide, m_origin.y - HalfSide, m_origin.z - HalfSide,
-		m_origin.x + HalfSide, m_origin.y - HalfSide, m_origin.z + HalfSide,
-		m_origin.x - HalfSide, m_origin.y - HalfSide, m_origin.z + HalfSide,
+		// back
 		m_origin.x - HalfSide, m_origin.y - HalfSide, m_origin.z - HalfSide,
-		m_origin.x + HalfSide, m_origin.y + HalfSide, m_origin.z - HalfSide,
-		m_origin.x + HalfSide, m_origin.y + HalfSide, m_origin.z + HalfSide,
-		m_origin.x - HalfSide, m_origin.y + HalfSide, m_origin.z + HalfSide,
-		m_origin.x - HalfSide, m_origin.y + HalfSide, m_origin.z - HalfSide 
-#endif
-	};
+		m_origin.x + HalfSide, m_origin.y - HalfSide, m_origin.z - HalfSide,
+		m_origin.x - HalfSide, m_origin.y + HalfSide, m_origin.z - HalfSide,
+		m_origin.x + HalfSide, m_origin.y + HalfSide, m_origin.z - HalfSide };
 
 	glGenBuffers(1, &m_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -49,26 +39,24 @@ Cube::Cube(const glm::vec3& origin, GLfloat side)
 	// Set up the index buffer.
 
 	GLuint indices[] = { 
-#if 1
 		// front
-		0, 3, 1,
-		0, 2, 3,
-
-#else
-		1, 3, 0,
-		7, 5, 4,
-		4, 1, 0,
-		5, 2, 1,
-		2, 7, 3,
-		0, 7, 4,
-		1, 2, 3,
-		7, 6, 5,
-		4, 5, 1,
-		5, 6, 2,
-		2, 6, 7,
-		0, 3, 7 
-#endif
-	};
+		0, 1, 3,
+		0, 3, 2,
+		// back
+		4, 7, 5,
+		4, 6, 7,
+		// right
+		0, 6, 4,
+		0, 2, 6,
+		// left
+		1, 5, 7,
+		1, 7, 3,
+		// top
+		2, 3, 7,
+		2, 7, 6,
+		// bottom
+		0, 5, 1,
+		0, 4, 5 };
 
 	m_indexCount = _countof(indices);
 
@@ -79,27 +67,36 @@ Cube::Cube(const glm::vec3& origin, GLfloat side)
 
 	// Set up the normal buffer.
 	GLfloat normals[] = {
-#if 1
 		// front
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-#else
-		 0.0f, -1.0f,  0.0f,
-		 0.0f,  1.0f,  0.0f,
-		 1.0f,  0.0f,  0.0f,
 		 0.0f,  0.0f,  1.0f,
-		-1.0f,  0.0f,  0.0f,
+		 0.0f,  0.0f,  1.0f,
+		 0.0f,  0.0f,  1.0f,
+		 0.0f,  0.0f,  1.0f,
+		// back
 		 0.0f,  0.0f, -1.0f,
-		 0.0f, -1.0f,  0.0f,
-		 0.0f,  1.0f,  0.0f,
-		 1.0f,  0.0f,  0.0f,
-		 0.0f,  0.0f,  1.0f,
+		 0.0f,  0.0f, -1.0f,
+		 0.0f,  0.0f, -1.0f,
+		 0.0f,  0.0f, -1.0f,
+		// right
 		-1.0f,  0.0f,  0.0f,
-		 0.0f,  0.0f, -1.0f 
-#endif
-	};
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+		// left
+		 1.0f,  0.0f,  0.0f,
+		 1.0f,  0.0f,  0.0f,
+		 1.0f,  0.0f,  0.0f,
+		 1.0f,  0.0f,  0.0f,
+		// top
+		 0.0f,  1.0f,  0.0f,
+		 0.0f,  1.0f,  0.0f,
+		 0.0f,  1.0f,  0.0f,
+		 0.0f,  1.0f,  0.0f,
+		// bottom
+		 0.0f, -1.0f,  0.0f,
+		 0.0f, -1.0f,  0.0f,
+		 0.0f, -1.0f,  0.0f,
+		 0.0f, -1.0f,  0.0f };
 
 	glGenBuffers(1, &m_normal);
 	glBindBuffer(GL_ARRAY_BUFFER, m_normal);
