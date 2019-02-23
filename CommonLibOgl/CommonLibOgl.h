@@ -65,6 +65,7 @@
 #include "Mesh.h"
 #include "Triangle.h"
 #include "Cube.h"
+#include "PlaneDirection.h"
 #include "Plane.h"
 
 

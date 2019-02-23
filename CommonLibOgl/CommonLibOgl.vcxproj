@@ -89,6 +89,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OpenGLInfo.h" />
     <ClInclude Include="Plane.h" />
+    <ClInclude Include="PlaneDirection.h" />
     <ClInclude Include="PlaneHorizontal.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="ProgramGLSL.h" />

@@ -96,6 +96,9 @@
     <ClInclude Include="Plane.h">
       <Filter>Primitives2</Filter>
     </ClInclude>
+    <ClInclude Include="PlaneDirection.h">
+      <Filter>Primitives2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
