@@ -413,12 +413,7 @@ void WindowMain::resize(int clientWidth, int clientHeight)
 
 	if (m_spScene)
 	{
-		GLfloat aspectRatio = clientWidth / (GLfloat)clientHeight;
-
-		// Calculate aspect ratio of the window.
-		gluPerspective(m_openGlInfo.FieldOfView, aspectRatio, m_openGlInfo.FrustumNear, m_openGlInfo.FrustumFar);
-
-		m_spScene->resize(aspectRatio);
+        m_spScene->resize(clientWidth / (GLfloat)clientHeight);
 	}
 }
 
@@ -526,10 +521,16 @@ void WindowMain::reactOnKeys(HWND hWnd, WPARAM wParam, LPARAM lParam)
     // Zoom in/out for the camera.
     //////////////////////////////////////////////////////////////////////////
     case VK_NUMPAD0:
-        m_spScene->scaleCamera(-0.05f);
+        m_spScene->scaleCamera(-0.05f);    // small amount of zoom
         break;
     case VK_NUMPAD1:
-        m_spScene->scaleCamera(0.05f);
+        m_spScene->scaleCamera(0.05f);     // small amount of zoom
+        break;
+    case VK_NUMPAD2:
+        m_spScene->scaleCamera(-0.25f);    // larger amount of zoom
+        break;
+    case VK_NUMPAD3:
+        m_spScene->scaleCamera(0.25f);     // larger amount of zoom
         break;
     }
 }
