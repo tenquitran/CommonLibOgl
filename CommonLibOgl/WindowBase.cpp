@@ -180,6 +180,15 @@ bool WindowBase::setupOpenGlContext()
 	GLint maxSamples = {};
 	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
 
+	GLint samplesToUse = maxSamples;
+
+	// (November 17, 2020) For some reason, using the maximum number of samples 
+	// causes wglChoosePixelFormatARB() to fail on my new NVIDIA videocard.
+	if (samplesToUse > 0)
+	{
+		samplesToUse /= 2;
+	}
+
 	int attribs[] = {
 		WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
 		WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
@@ -190,8 +199,8 @@ bool WindowBase::setupOpenGlContext()
 		WGL_DEPTH_BITS_ARB, 24,
 		WGL_ALPHA_BITS_ARB, 8,
 		WGL_STENCIL_BITS_ARB, 8,
-		WGL_SAMPLE_BUFFERS_ARB, 1,      // number of buffers for multisampling (must be 1)
-		WGL_SAMPLES_ARB, maxSamples,    // number of samples
+		WGL_SAMPLE_BUFFERS_ARB, 1,        // number of buffers for multisampling (must be 1)
+		WGL_SAMPLES_ARB, samplesToUse,    // number of samples
 		0};    // zero indicates the end of the array
 
 	int pixelFormat2 = {};
