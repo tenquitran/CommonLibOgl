@@ -146,11 +146,11 @@ bool Cubemap::loadCubemapTextures()
 
 	std::string cubemapFiles[] = { "posx.png", "negx.png", "posy.png", "negy.png", "posz.png", "negz.png" };
 
-	//const std::string folder = "data";
-
+#if 0
 	auto del = [](unsigned char* pBuff) {
 		SOIL_free_image_data(pBuff);
 	};
+#endif
 
 	for (int i = 0; i < 6; ++i)
 	{
@@ -158,15 +158,21 @@ bool Cubemap::loadCubemapTextures()
 
 		std::string filePath = m_textureDir + "/" + cubemapFiles[i];
 
+#if 0
 		std::unique_ptr<unsigned char[], decltype(del)> spData(
 			SOIL_load_image(filePath.c_str(), &width, &height, 0, SOIL_LOAD_RGB));
-		if (!spData)
+#else
+		unsigned char* p = SOIL_load_image(filePath.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+#endif
+		if (!p)
 		{
 			std::wcerr << L"Failed to load texture " << filePath.c_str() << ": " << SOIL_last_result() << '\n';
 			assert(false); return false;
 		}
 
-		glTexImage2D(targets[i], 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, spData.get());
+		glTexImage2D(targets[i], 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, p);
+
+		SOIL_free_image_data(p);
 	}
 
 	glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
