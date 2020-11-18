@@ -13,6 +13,12 @@ namespace CommonLibOgl
 
 		virtual void render() const override;
 
+		// Get the primitive type.
+		virtual const wchar_t* getType() const override
+		{
+			return L"PlaneHorizontal";
+		}
+
 	private:
 		void setMaterialProperties() const;
 

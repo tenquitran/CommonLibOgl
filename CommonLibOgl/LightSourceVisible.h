@@ -23,7 +23,7 @@ namespace CommonLibOgl
 		virtual bool create() override;
 
 		// Get the primitive type.
-		virtual wchar_t* getType() const override
+		virtual const wchar_t* getType() const override
 		{
 			return L"LightSourceVisible";
 		}

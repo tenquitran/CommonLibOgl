@@ -171,6 +171,7 @@ bool Cubemap::loadCubemapTextures()
 		}
 
 		glTexImage2D(targets[i], 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, p);
+		//glTexImage2D(targets[i], 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, spData.get());
 
 		SOIL_free_image_data(p);
 	}

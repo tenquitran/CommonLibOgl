@@ -25,7 +25,7 @@ namespace CommonLibOgl
 		virtual bool create() = 0;
 
 		// Get the primitive type.
-		virtual wchar_t* getType() const = 0;
+		virtual const wchar_t* getType() const = 0;
 
 		virtual void render() const = 0;
 
